@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import { Wordmark } from '@/components/type/Wordmark';
 
 const NAV = [
   { href: '/', label: 'Home' },
@@ -38,9 +39,7 @@ export function SiteHeader() {
 
   return (
     <header className="header">
-      <Link href="/" className="header__mark">
-        Casa del Espacio<span className="header__stop">.</span>
-      </Link>
+      <Wordmark size="sm" className="header__mark" />
 
       <span className="header__descriptor">(Architecture &amp; Interior)</span>
 
@@ -60,7 +59,7 @@ export function SiteHeader() {
       </nav>
 
       <Link href="/contact" className="header__cta">
-        Start a project
+        <span>Start a project</span>
       </Link>
 
       <button

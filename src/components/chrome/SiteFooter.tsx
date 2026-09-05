@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { MetaLabel } from '@/components/type/MetaLabel';
+import { Wordmark } from '@/components/type/Wordmark';
 
 const COLUMNS = [
   { title: 'Site', links: [
@@ -15,9 +16,7 @@ export function SiteFooter() {
   return (
     <footer className="footer">
       <div className="footer__top">
-        <Link href="/" className="footer__mark">
-          Casa del Espacio<span className="header__stop">.</span>
-        </Link>
+        <Wordmark size="lg" className="footer__mark" />
 
         {COLUMNS.map((col) => (
           <div className="footer__col" key={col.title}>

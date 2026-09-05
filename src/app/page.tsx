@@ -4,6 +4,7 @@ import { Rail } from '@/components/layout/Rail';
 import { SpecTable } from '@/components/type/SpecTable';
 import { MetaLabel, CoordinateStamp } from '@/components/type/MetaLabel';
 import { MaskUp, MetaIn, Counter, Veil } from '@/lib/motion/primitives';
+import { LightFall } from '@/components/media/LightFall';
 
 /**
  * FOUNDATIONS GALLERY — temporary.
@@ -48,21 +49,11 @@ export default function Page() {
         </Field>
       </Section>
 
-      {/* ---- IM.01: the real hero image lands here ---- */}
-      <Section bleed>
+      {/* ---- IM.01 · W.01: the real hero image drops into src ---- */}
+      <Section bleed flush>
         <Veil>
-          <div
-            data-veil-inner
-            data-image-slot="IM.01"
-            style={{
-              aspectRatio: '16 / 9',
-              background:
-                'linear-gradient(163deg, var(--c-coffee) 0%, var(--c-espresso) 58%, var(--c-mahogany) 100%)',
-              display: 'grid',
-              placeItems: 'center',
-            }}
-          >
-            <MetaLabel>IM.01 · Home hero · 16:9 · min 3200px</MetaLabel>
+          <div data-veil-inner data-image-slot="IM.01">
+            <LightFall label="IM.01 · Home hero · 16:9 · awaiting photography" />
           </div>
         </Veil>
       </Section>
@@ -113,15 +104,7 @@ export default function Page() {
           <div style={{ gridColumn: '1 / -1', marginTop: 'var(--s-7)' }}>
             <Rail label="Services">
               {SERVICES.map((s) => (
-                <article
-                  key={s.n}
-                  data-rail-item
-                  style={{
-                    width: 'min(84vw, 340px)',
-                    borderTop: '1px solid var(--c-hairline)',
-                    paddingTop: 'var(--s-4)',
-                  }}
-                >
+                <article key={s.n} data-rail-item className="rail__card">
                   <MetaLabel>{s.n}</MetaLabel>
                   <h3 className="display-m" style={{ marginTop: 'var(--s-3)' }}>{s.title}</h3>
                   <p className="prose" style={{ marginTop: 'var(--s-4)', fontSize: 'var(--t-caption)' }}>{s.body}</p>

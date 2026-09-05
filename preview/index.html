@@ -1,0 +1,613 @@
+<title>Casa del Espacio Preview</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Instrument+Sans:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap">
+<style>
+:root{
+  --c-void:#100C09; --c-espresso:#14100D; --c-coffee:#3B2A21; --c-mahogany:#5A3428;
+  --c-linen:#EDE6DA; --c-cream:#F7F2EA; --c-brass:#C89A5B; --c-terracotta:#C2643A;
+  --c-hairline:#3A2A22; --c-hairline-soft:#241A15;
+  --c-tx:#F7F2EA; --c-tx2:#A8998C; --c-tx3:#8A7A6D;
+  --c-inv-tx:#1F1712; --c-inv-tx2:#6B5C4F; --c-inv-tx3:#72624F; --c-inv-rule:#C9BCAB;
+
+  --f-d:"Instrument Serif","Iowan Old Style",Georgia,serif;
+  --f-s:"Instrument Sans","Helvetica Neue",Arial,sans-serif;
+  --f-m:"IBM Plex Mono",ui-monospace,"SF Mono",monospace;
+
+  --t-display-xl:clamp(3.25rem,1.20rem + 9.10vw,9.5rem);
+  --t-display-l:clamp(2.5rem,1.36rem + 5.08vw,6rem);
+  --t-display-m:clamp(1.875rem,1.22rem + 2.91vw,3.875rem);
+  --t-statement:clamp(1.375rem,1.10rem + 1.21vw,2.2rem);
+  --t-caption:0.8125rem; --t-meta:0.6875rem;
+
+  --e-entrance:cubic-bezier(0.16,1,0.30,1);
+  --e-micro:cubic-bezier(0.40,0,0.20,1);
+  --e-exit:cubic-bezier(0.55,0,1,0.45);
+
+  --gutter:clamp(1.25rem,0.72rem + 2.34vw,4rem);
+  --section-y:clamp(5rem,2.55rem + 10.9vw,13.5rem);
+  --s-2:.5rem; --s-3:.75rem; --s-4:1rem; --s-5:1.5rem; --s-6:2rem; --s-7:3rem; --s-8:4rem; --s-9:6rem;
+}
+*,*::before,*::after{box-sizing:border-box}
+body{
+  margin:0;background:var(--c-espresso);color:var(--c-tx);
+  font-family:var(--f-s);font-size:16px;line-height:1.7;
+  -webkit-font-smoothing:antialiased;overflow-x:clip;
+}
+h1,h2,h3{margin:0;font-weight:400;text-wrap:balance}
+p{margin:0}
+::selection{background:var(--c-brass);color:var(--c-espresso)}
+:focus-visible{outline:2px solid var(--c-brass);outline-offset:3px}
+
+/* ---------- type ---------- */
+.display-xl{font-family:var(--f-d);font-size:var(--t-display-xl);line-height:.92;letter-spacing:-.022em}
+.display-l{font-family:var(--f-d);font-size:var(--t-display-l);line-height:.92;letter-spacing:-.022em}
+.display-m{font-family:var(--f-d);font-size:var(--t-display-m);line-height:1;letter-spacing:-.02em}
+.statement{font-size:var(--t-statement);line-height:1.3;max-width:30ch}
+.prose{max-width:64ch;color:var(--c-tx2)}
+.meta{
+  font-family:var(--f-m);font-size:var(--t-meta);line-height:1.4;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--c-tx3);display:inline-block;
+}
+.coords{font-variant-numeric:tabular-nums}
+
+/* line mask for the reveal */
+.lm-wrap{display:block;overflow:clip;padding-bottom:.18em;margin-bottom:-.18em}
+.lm{display:block}
+
+/* ---------- preview banner ---------- */
+.pv{
+  position:fixed;left:0;right:0;bottom:0;z-index:80;
+  background:var(--c-void);border-top:1px solid var(--c-hairline);
+  padding:.6rem var(--gutter);display:flex;gap:1rem;justify-content:space-between;
+  flex-wrap:wrap;align-items:center;
+}
+.pv b{color:var(--c-brass);font-weight:500}
+
+/* ---------- header ---------- */
+.header{
+  position:sticky;top:0;z-index:50;display:grid;align-items:center;gap:var(--s-4);
+  grid-template-columns:1fr auto;padding:var(--s-5) var(--gutter);
+  background:color-mix(in oklab,var(--c-espresso) 82%,transparent);
+  backdrop-filter:blur(14px);border-bottom:1px solid var(--c-hairline-soft);
+}
+.wordmark{font-family:var(--f-d);color:var(--c-tx);text-decoration:none;white-space:nowrap;
+  display:inline-flex;align-items:center;min-height:44px}
+.wordmark--sm{font-size:1.35rem;letter-spacing:.002em}
+.wordmark--lg{font-size:var(--t-display-m);letter-spacing:-.022em;line-height:1}
+.stop{color:var(--c-brass)}
+.h-desc,.h-nav,.h-cta{display:none}
+.h-toggle{justify-self:end;display:inline-flex;align-items:center;justify-content:center;
+  min-height:44px;min-width:64px;font-family:var(--f-m);font-size:var(--t-meta);
+  letter-spacing:.14em;text-transform:uppercase;color:var(--c-tx);background:none;
+  border:1px solid var(--c-hairline);cursor:pointer}
+@media (min-width:1024px){
+  .header{grid-template-columns:auto auto 1fr auto}
+  .h-desc{display:inline;font-size:var(--t-caption);color:var(--c-tx3)}
+  .h-nav{display:block;justify-self:end;font-size:var(--t-caption);color:var(--c-tx2)}
+  .h-cta{display:inline-flex;align-items:center;justify-self:end;min-height:44px;padding-block:var(--s-2);
+    font-size:var(--t-caption);color:var(--c-tx);text-decoration:none;
+    transition:color 180ms var(--e-micro)}
+  .h-cta>span{border-bottom:1px solid currentColor;padding-bottom:2px}
+  .h-cta:hover{color:var(--c-brass)}
+  .h-toggle{display:none}
+}
+.h-nav a{color:inherit;text-decoration:none;transition:color 180ms var(--e-micro)}
+.h-nav a:hover,.h-nav a[aria-current]{color:var(--c-brass)}
+
+/* ---------- sections ---------- */
+.section{padding:var(--section-y) var(--gutter);position:relative}
+.section--bleed{padding-left:0;padding-right:0}
+/* A hero opens the page; it takes no leading rhythm. */
+.section--flush{padding-top:0}
+.field{max-width:1440px;margin-inline:auto;display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));gap:var(--s-5)}
+@media (min-width:640px){.field{grid-template-columns:repeat(6,minmax(0,1fr))}}
+@media (min-width:1024px){.field{grid-template-columns:repeat(12,minmax(0,1fr));gap:var(--s-6)}}
+.span-all{grid-column:1/-1}
+
+[data-tone="light"]{
+  background:var(--c-linen);color:var(--c-inv-tx);
+  --c-tx:var(--c-inv-tx);--c-tx2:var(--c-inv-tx2);--c-tx3:var(--c-inv-tx3);
+  --c-hairline:var(--c-inv-rule);--c-hairline-soft:#DCD2C4;
+}
+
+/* ---------- W.01 light-fall ---------- */
+.lf{position:relative;overflow:hidden;background:var(--c-espresso)}
+.lf__ground{position:absolute;inset:0;background:
+  radial-gradient(ellipse 58% 46% at 42% -6%,rgba(200,154,91,.30) 0%,rgba(200,154,91,.10) 34%,transparent 72%),
+  linear-gradient(163deg,var(--c-coffee) 0%,var(--c-espresso) 58%,var(--c-mahogany) 100%)}
+.lf__canvas{position:absolute;inset:0;width:100%;height:100%;display:block;opacity:0;
+  transition:opacity 600ms var(--e-entrance)}
+.lf__canvas[data-gl="on"]{opacity:1}
+.lf__label{position:absolute;left:var(--gutter);bottom:var(--s-4);color:var(--c-tx2)}
+
+/* hero overlay furniture */
+.hero{position:relative;min-height:min(92svh,860px)}
+.hero__grid{position:absolute;inset:0;padding:var(--s-8) var(--gutter);
+  display:flex;flex-direction:column;justify-content:space-between;pointer-events:none}
+.hero__top{display:flex;justify-content:space-between;gap:var(--s-5);flex-wrap:wrap}
+.hero__bottom{display:flex;justify-content:space-between;gap:var(--s-6);
+  align-items:flex-end;flex-wrap:wrap}
+.hero__manifesto{font-size:var(--t-statement);line-height:1.3;max-width:24ch;color:var(--c-cream)}
+.cue{writing-mode:vertical-rl;letter-spacing:.3em}
+
+/* ---------- stats ---------- */
+.stat{grid-column:span 2}
+@media (min-width:1024px){.stat{grid-column:span 3}}
+.stat__n{font-family:var(--f-d);font-size:var(--t-display-m);line-height:1;
+  font-variant-numeric:tabular-nums;margin-top:var(--s-2)}
+
+/* ---------- panel stack (MO.03) ---------- */
+.panel{position:sticky;top:0;min-height:100svh;transform-origin:center top;
+  will-change:transform,filter;display:grid;overflow:hidden}
+.panel__bg{position:absolute;inset:0}
+.panel__in{position:relative;padding:var(--s-9) var(--gutter);
+  display:flex;flex-direction:column;justify-content:space-between;min-height:100svh}
+.p1 .panel__bg{background:linear-gradient(158deg,#4A382C 0%,#1B1410 62%,#5A3428 100%)}
+.p2 .panel__bg{background:linear-gradient(198deg,#2E2A22 0%,#14100D 55%,#3B2A21 100%)}
+.p3 .panel__bg{background:linear-gradient(140deg,#5A3428 0%,#171210 60%,#3E2E24 100%)}
+.panel__bg::after{content:"";position:absolute;inset:0;
+  background:radial-gradient(ellipse 52% 40% at 50% -8%,rgba(200,154,91,.26),transparent 70%)}
+
+/* ---------- rail (MO.04) ---------- */
+.rail{display:flex;gap:var(--s-5);overflow-x:auto;overscroll-behavior-x:contain;
+  scroll-snap-type:x mandatory;scrollbar-width:none;padding-bottom:var(--s-2);cursor:grab}
+.rail::-webkit-scrollbar{display:none}
+.rail>*{scroll-snap-align:start;flex:0 0 auto;width:min(84vw,400px);
+  border-top:1px solid var(--c-hairline);padding-top:var(--s-4)}
+.rail__nav{display:flex;gap:var(--s-2);margin-top:var(--s-5)}
+.rail__btn{width:44px;height:44px;display:grid;place-items:center;background:none;
+  color:var(--c-tx);border:1px solid var(--c-hairline);cursor:pointer;font-size:1rem;
+  transition:border-color 180ms var(--e-micro),color 180ms var(--e-micro)}
+.rail__btn:hover:not(:disabled){border-color:var(--c-brass);color:var(--c-brass)}
+.rail__btn:disabled{opacity:.3;cursor:default}
+
+/* ---------- project cards (W.02 hover) ---------- */
+.cards{display:grid;gap:var(--s-5);grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+.card{position:relative;overflow:hidden;aspect-ratio:3/4;display:block;
+  text-decoration:none;color:var(--c-cream)}
+.card__bg{position:absolute;inset:0;transition:transform 900ms var(--e-entrance),
+  filter 400ms var(--e-micro)}
+.c1 .card__bg{background:linear-gradient(150deg,#5A3428,#181310 70%)}
+.c2 .card__bg{background:linear-gradient(200deg,#3B2A21,#100C09 72%)}
+.c3 .card__bg{background:linear-gradient(120deg,#4A5340,#14100D 68%)}
+.card:hover .card__bg{transform:scale(1.06);filter:brightness(1.18) saturate(1.08)}
+.card__cap{position:absolute;left:var(--s-4);right:var(--s-4);bottom:var(--s-4)}
+.card__t{font-family:var(--f-d);font-size:1.5rem;line-height:1.05;margin-top:var(--s-2)}
+.card__view{position:absolute;inset:0;display:grid;place-items:center;opacity:0;
+  transition:opacity 320ms var(--e-micro)}
+.card:hover .card__view{opacity:1}
+.card__view span{border:1px solid var(--c-brass);color:var(--c-brass);
+  padding:.5rem .9rem;font-family:var(--f-m);font-size:var(--t-meta);letter-spacing:.2em}
+
+/* ---------- spec table ---------- */
+.spec{max-width:640px}
+.spec__row{display:grid;grid-template-columns:1fr auto;gap:var(--s-4);padding:var(--s-3) 0;
+  border-bottom:1px solid var(--c-hairline-soft)}
+.spec__row:first-of-type{border-top:1px solid var(--c-hairline-soft)}
+.spec__row dt{color:var(--c-tx2);font-size:var(--t-caption);margin:0}
+.spec__row dd{margin:0;color:var(--c-tx);font-size:var(--t-caption);font-family:var(--f-m);
+  font-variant-numeric:tabular-nums;text-align:right}
+
+/* ---------- footer ---------- */
+.footer{border-top:1px solid var(--c-hairline);padding:var(--s-9) var(--gutter) 5rem;
+  display:flex;flex-direction:column;gap:var(--s-8)}
+.footer__top{display:grid;gap:var(--s-7);grid-template-columns:repeat(auto-fit,minmax(180px,1fr))}
+.footer ul{list-style:none;margin:var(--s-3) 0 0;padding:0;display:flex;flex-direction:column;gap:var(--s-2)}
+.footer a.fl{color:var(--c-tx2);text-decoration:none;font-size:var(--t-caption);
+  transition:color 180ms var(--e-micro)}
+.footer a.fl:hover{color:var(--c-brass)}
+.footer__base{display:flex;justify-content:space-between;gap:var(--s-4);flex-wrap:wrap;
+  border-top:1px solid var(--c-hairline-soft);padding-top:var(--s-5)}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:1ms!important;transition-duration:1ms!important}
+}
+</style>
+
+<header class="header">
+  <a href="#" class="wordmark wordmark--sm">Casa del Espacio<span class="stop">.</span></a>
+  <span class="h-desc">(Architecture &amp; Interior)</span>
+  <nav class="h-nav" aria-label="Primary">
+    <a href="#" aria-current="page">Home</a>, <a href="#work">Work</a>, <a href="#studio">Studio</a>,
+    <a href="#services">Services</a>, <a href="#journal">Journal</a>
+  </nav>
+  <a href="#contact" class="h-cta"><span>Start a project</span></a>
+  <button class="h-toggle" type="button">Menu</button>
+</header>
+
+<!-- ============ HERO · W.01 ============ -->
+<section class="section section--bleed section--flush">
+  <div class="lf hero">
+    <div class="lf__ground"></div>
+    <canvas class="lf__canvas" aria-hidden="true"></canvas>
+    <div class="hero__grid">
+      <div class="hero__top">
+        <span class="meta coords">43.7031° N,<br>5.4500° E</span>
+        <span class="meta">Provence &middot; 2025</span>
+      </div>
+      <div class="hero__bottom">
+        <h1 class="hero__manifesto" data-split>We design spaces that feel like they were always meant to be there. Grounded in simplicity, guided by light.</h1>
+        <span class="meta cue">Scroll</span>
+      </div>
+    </div>
+    <span class="lf__label meta">IM.01 · procedural placeholder · awaiting photography</span>
+  </div>
+</section>
+
+<!-- ============ STATEMENT ============ -->
+<section class="section" id="studio">
+  <div class="field">
+    <div class="span-all">
+      <span class="meta" data-meta>The studio</span>
+      <h2 class="display-l" data-split style="margin-top:var(--s-5)">A house is not a container. It is the shape a life takes.</h2>
+      <p class="prose" style="margin-top:var(--s-6)">Casa del Espacio works in warm materials and low light — mahogany, plaster, stone, brass. Rooms are organised around a single top-lit volume, so light moves across a wall through the day rather than arriving all at once.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ STATS · MO.06 ============ -->
+<section class="section" style="padding-top:0">
+  <div class="field">
+    <div class="stat"><span class="meta">/1</span><p class="stat__n"><span data-count="18">18</span></p><p class="meta" style="margin-top:var(--s-2)">Projects completed</p></div>
+    <div class="stat"><span class="meta">/2</span><p class="stat__n"><span data-count="12">12</span></p><p class="meta" style="margin-top:var(--s-2)">Years practising</p></div>
+    <div class="stat"><span class="meta">/3</span><p class="stat__n"><span data-count="4">4</span></p><p class="meta" style="margin-top:var(--s-2)">Countries</p></div>
+    <div class="stat"><span class="meta">/4</span><p class="stat__n"><span data-count="9400" data-suffix=" m²">9,400 m²</span></p><p class="meta" style="margin-top:var(--s-2)">Delivered</p></div>
+  </div>
+</section>
+
+<!-- ============ PANEL STACK · MO.03 ============ -->
+<div id="work">
+  <section class="panel p1">
+    <div class="panel__bg"></div>
+    <div class="panel__in">
+      <div class="hero__top">
+        <span class="meta coords">43.7031° N,<br>5.4500° E</span>
+        <span class="meta">Provence &middot; 2025</span>
+      </div>
+      <div class="hero__bottom">
+        <h2 class="display-l" data-split>villa lumière</h2>
+        <p class="prose" style="max-width:34ch;color:var(--c-cream)">A secluded villa surrounded by vineyards and olive trees. Expansive windows, natural textures, a horizon that never ends.</p>
+      </div>
+    </div>
+  </section>
+  <section class="panel p2">
+    <div class="panel__bg"></div>
+    <div class="panel__in">
+      <div class="hero__top">
+        <span class="meta coords">43.5528° N,<br>7.0174° E</span>
+        <span class="meta">Côte d'Azur &middot; 2025</span>
+      </div>
+      <div class="hero__bottom">
+        <h2 class="display-l" data-split>villa solenne</h2>
+        <p class="prose" style="max-width:34ch;color:var(--c-cream)">A coastal villa where the sea and sky merge. Terraces bathed in Mediterranean light, serene interiors, the calm of endless horizons.</p>
+      </div>
+    </div>
+  </section>
+  <section class="panel p3">
+    <div class="panel__bg"></div>
+    <div class="panel__in">
+      <div class="hero__top">
+        <span class="meta coords">31.2304° N,<br>121.4737° E</span>
+        <span class="meta">Shanghai &middot; 2024</span>
+      </div>
+      <div class="hero__bottom">
+        <h2 class="display-l" data-split>casa nueve</h2>
+        <p class="prose" style="max-width:34ch;color:var(--c-cream)">An urban sanctuary of calm and craft. Undyed jade, timber screens, and restraint as a form of luxury.</p>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ============ CARDS · W.02 hover ============ -->
+<section class="section">
+  <div class="field">
+    <div class="span-all">
+      <span class="meta" data-meta>Selected work</span>
+      <h2 class="display-m" data-split style="margin-top:var(--s-4)">Hover a card</h2>
+      <p class="prose" style="margin-top:var(--s-4);font-size:var(--t-caption)">W.02 ships as a pointer-velocity RGB displacement shader. This preview shows the T2 fallback — scale and brightness — because the shader needs real photography to tune against.</p>
+    </div>
+    <div class="span-all cards" style="margin-top:var(--s-7)">
+      <a class="card c1" href="#work"><div class="card__bg"></div><div class="card__view"><span>VIEW</span></div><div class="card__cap"><span class="meta">Provence · 2025</span><p class="card__t">Villa Lumière</p></div></a>
+      <a class="card c2" href="#work"><div class="card__bg"></div><div class="card__view"><span>VIEW</span></div><div class="card__cap"><span class="meta">Côte d'Azur · 2025</span><p class="card__t">Villa Solenne</p></div></a>
+      <a class="card c3" href="#work"><div class="card__bg"></div><div class="card__view"><span>VIEW</span></div><div class="card__cap"><span class="meta">Shanghai · 2024</span><p class="card__t">Casa Nueve</p></div></a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SERVICES RAIL · MO.04, linen ============ -->
+<section class="section" data-tone="light" id="services">
+  <div class="field">
+    <div class="span-all">
+      <span class="meta" data-meta>Services</span>
+      <h2 class="display-l" data-split style="margin-top:var(--s-4)">Crafting considered space</h2>
+    </div>
+    <div class="span-all" style="margin-top:var(--s-7)">
+      <div class="rail" role="group" aria-label="Services" tabindex="0">
+        <article><span class="meta">/1</span><h3 class="display-m" style="margin-top:var(--s-3)">Architecture</h3><p class="prose" style="margin-top:var(--s-4);font-size:var(--t-caption)">From first sketch to final handover. Residential and hospitality work at every scale.</p></article>
+        <article><span class="meta">/2</span><h3 class="display-m" style="margin-top:var(--s-3)">Interior</h3><p class="prose" style="margin-top:var(--s-4);font-size:var(--t-caption)">Materials, light and furniture, resolved as one decision rather than three.</p></article>
+        <article><span class="meta">/3</span><h3 class="display-m" style="margin-top:var(--s-3)">Delivery</h3><p class="prose" style="margin-top:var(--s-4);font-size:var(--t-caption)">Consultants, contractors and programme, held to the drawing set.</p></article>
+        <article><span class="meta">/4</span><h3 class="display-m" style="margin-top:var(--s-3)">Furniture</h3><p class="prose" style="margin-top:var(--s-4);font-size:var(--t-caption)">Pieces made for a specific room, when nothing off the shelf will sit right.</p></article>
+      </div>
+      <div class="rail__nav">
+        <button class="rail__btn" type="button" data-rail="-1" aria-label="Previous" disabled>&larr;</button>
+        <button class="rail__btn" type="button" data-rail="1" aria-label="Next">&rarr;</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SPEC TABLE ============ -->
+<section class="section" id="journal">
+  <div class="field">
+    <div class="span-all spec">
+      <span class="meta" data-meta>Project specification</span>
+      <dl style="margin:var(--s-4) 0 0">
+        <div class="spec__row"><dt>Year completed</dt><dd>2025</dd></div>
+        <div class="spec__row"><dt>Gross floor area</dt><dd>412 m²</dd></div>
+        <div class="spec__row"><dt>Typology</dt><dd>Residence</dd></div>
+        <div class="spec__row"><dt>Ceiling height</dt><dd>5.4 m</dd></div>
+        <div class="spec__row"><dt>Status</dt><dd>Completed</dd></div>
+      </dl>
+    </div>
+  </div>
+</section>
+
+<footer class="footer" id="contact">
+  <div class="footer__top">
+    <a href="#" class="wordmark wordmark--lg">Casa del Espacio<span class="stop">.</span></a>
+    <div>
+      <span class="meta">Site</span>
+      <ul>
+        <li><a class="fl" href="#work">Work</a></li>
+        <li><a class="fl" href="#studio">Studio</a></li>
+        <li><a class="fl" href="#services">Services</a></li>
+        <li><a class="fl" href="#journal">Journal</a></li>
+      </ul>
+    </div>
+    <div><span class="meta">Studio</span><p class="prose" style="margin-top:var(--s-3);font-size:var(--t-caption)">Contact details to follow.</p></div>
+  </div>
+  <div class="footer__base"><span class="meta">&copy; 2026 Casa del Espacio</span><span class="meta">Architecture &amp; Interior</span></div>
+</footer>
+
+<div class="pv">
+  <span class="meta">Preview &middot; Rev A &middot; <b>placeholder imagery</b> — every gradient is an image slot</span>
+  <span class="meta">Real motion: scroll, hover cards, drag the services rail</span>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.3.26/dist/lenis.min.js"></script>
+<script>
+(function(){
+  'use strict';
+  var reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var fine = matchMedia('(pointer: fine)').matches;
+  var hasGSAP = typeof window.gsap !== 'undefined';
+
+  /* ---------- W.01 light-fall shader ---------- */
+  var VERT = 'attribute vec2 uv;attribute vec2 position;varying vec2 vUv;'+
+             'void main(){vUv=uv;gl_Position=vec4(position,0.0,1.0);}';
+  var FRAG = [
+    'precision highp float;',
+    'uniform float uTime;uniform vec2 uRes;uniform vec2 uPointer;',
+    'varying vec2 vUv;',
+    'float hash(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}',
+    'void main(){',
+    '  vec2 uv=vUv+uPointer*(6.0/uRes);',
+    '  vec3 espresso=vec3(0.078,0.063,0.051);',
+    '  vec3 coffee=vec3(0.231,0.165,0.129);',
+    '  vec3 mahogany=vec3(0.353,0.204,0.157);',
+    '  vec3 col=mix(espresso,coffee,smoothstep(0.0,1.0,uv.y));',
+    '  col=mix(col,mahogany,smoothstep(0.78,0.12,uv.x)*0.34);',
+    '  col+=vec3(0.10,0.08,0.06)*smoothstep(0.86,0.99,uv.x)*smoothstep(0.05,0.70,uv.y);',
+    '  float t=fract(uTime/14.0);',
+    '  float band=smoothstep(0.34,0.0,abs(uv.y-(1.28-t*1.55)));',
+    '  float pool=smoothstep(0.92,0.0,distance(uv,vec2(0.42,1.06)));',
+    '  vec3 brass=vec3(0.784,0.604,0.357);',
+    '  col+=brass*(band*0.085+pool*0.20);',
+    '  float vig=smoothstep(1.18,0.34,distance(uv,vec2(0.5)));',
+    '  col*=mix(0.68,1.0,vig);',
+    '  float g=hash(gl_FragCoord.xy+fract(uTime)*137.0);',
+    '  col+=(g-0.5)*0.030;',
+    '  gl_FragColor=vec4(col,1.0);',
+    '}'
+  ].join('\n');
+
+  function initShader(){
+    var host = document.querySelector('.hero');
+    var canvas = document.querySelector('.lf__canvas');
+    if(!host||!canvas) return;
+    // Fallback ladder T1 gate: fine pointer, no reduced motion, >=4 cores.
+    if(reduced || !fine || (navigator.hardwareConcurrency||2) < 4) return;
+    var gl = canvas.getContext('webgl',{alpha:false,antialias:false});
+    if(!gl) return;
+
+    function sh(type,src){
+      var s=gl.createShader(type); gl.shaderSource(s,src); gl.compileShader(s);
+      if(!gl.getShaderParameter(s,gl.COMPILE_STATUS)) return null;
+      return s;
+    }
+    var vs=sh(gl.VERTEX_SHADER,VERT), fs=sh(gl.FRAGMENT_SHADER,FRAG);
+    if(!vs||!fs) return;
+    var pr=gl.createProgram(); gl.attachShader(pr,vs); gl.attachShader(pr,fs); gl.linkProgram(pr);
+    if(!gl.getProgramParameter(pr,gl.LINK_STATUS)) return;
+    gl.useProgram(pr);
+
+    // Fullscreen triangle.
+    var posB=gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER,posB);
+    gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,3,-1,-1,3]),gl.STATIC_DRAW);
+    var pl=gl.getAttribLocation(pr,'position'); gl.enableVertexAttribArray(pl);
+    gl.vertexAttribPointer(pl,2,gl.FLOAT,false,0,0);
+    var uvB=gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER,uvB);
+    gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([0,0,2,0,0,2]),gl.STATIC_DRAW);
+    var ul=gl.getAttribLocation(pr,'uv'); gl.enableVertexAttribArray(ul);
+    gl.vertexAttribPointer(ul,2,gl.FLOAT,false,0,0);
+
+    var uT=gl.getUniformLocation(pr,'uTime'),
+        uR=gl.getUniformLocation(pr,'uRes'),
+        uP=gl.getUniformLocation(pr,'uPointer');
+
+    function resize(){
+      var dpr=Math.min(devicePixelRatio||1,2);
+      var w=host.clientWidth, h=host.clientHeight;
+      canvas.width=w*dpr; canvas.height=h*dpr;
+      gl.viewport(0,0,canvas.width,canvas.height);
+      gl.uniform2f(uR,w,h);
+    }
+    resize();
+    addEventListener('resize',resize);
+
+    var tx=0,ty=0,cx=0,cy=0;
+    host.addEventListener('pointermove',function(e){
+      var r=host.getBoundingClientRect();
+      tx=((e.clientX-r.left)/r.width)*2-1;
+      ty=((e.clientY-r.top)/r.height)*2-1;
+    });
+    host.addEventListener('pointerleave',function(){tx=0;ty=0;});
+
+    var vis=true;
+    if('IntersectionObserver' in window){
+      new IntersectionObserver(function(es){vis=es[0].isIntersecting;}).observe(host);
+    }
+
+    var t0=performance.now();
+    canvas.dataset.gl='on';
+    (function frame(now){
+      requestAnimationFrame(frame);
+      if(!vis) return;
+      cx+=(tx-cx)*0.04; cy+=(ty-cy)*0.04;
+      gl.uniform2f(uP,cx,cy);
+      gl.uniform1f(uT,(now-t0)/1000);
+      gl.drawArrays(gl.TRIANGLES,0,3);
+    })(performance.now());
+  }
+  initShader();
+
+  /* ---------- Lenis ---------- */
+  if(!reduced && fine && typeof window.Lenis !== 'undefined'){
+    var lenis = new Lenis({lerp:0.085, wheelMultiplier:1});
+    if(hasGSAP && window.ScrollTrigger){
+      lenis.on('scroll', ScrollTrigger.update);
+      gsap.ticker.add(function(time){ lenis.raf(time*1000); });
+      gsap.ticker.lagSmoothing(0);
+    } else {
+      requestAnimationFrame(function r(t){ lenis.raf(t); requestAnimationFrame(r); });
+    }
+  }
+
+  /* ---------- MO.01 mask-up (own line splitter) ---------- */
+  function splitLines(el){
+    var text = el.textContent;
+    el.textContent = '';
+    var words = text.split(/\s+/).filter(Boolean).map(function(w){
+      var s=document.createElement('span'); s.textContent=w+' ';
+      el.appendChild(s); return s;
+    });
+    var lines=[], cur=null, top=null;
+    words.forEach(function(w){
+      var t=w.offsetTop;
+      if(top===null||Math.abs(t-top)>2){ cur=[]; lines.push(cur); top=t; }
+      cur.push(w);
+    });
+    el.textContent='';
+    return lines.map(function(ws){
+      var wrap=document.createElement('span'); wrap.className='lm-wrap';
+      var inner=document.createElement('span'); inner.className='lm';
+      ws.forEach(function(w){ inner.appendChild(w); });
+      wrap.appendChild(inner); el.appendChild(wrap);
+      return inner;
+    });
+  }
+
+  if(hasGSAP && window.ScrollTrigger && !reduced){
+    gsap.registerPlugin(ScrollTrigger);
+
+    document.fonts.ready.then(function(){
+      try{
+      document.querySelectorAll('[data-split]').forEach(function(el){
+        var label = el.textContent.trim();
+        var lines = splitLines(el);
+        el.setAttribute('aria-label', label);
+        lines.forEach(function(l){ l.parentElement.setAttribute('aria-hidden','true'); });
+        gsap.fromTo(lines,{yPercent:110},{
+          yPercent:0, duration:0.9, ease:'expo.out', immediateRender:false,
+          stagger:{each:0.07, amount:Math.min(lines.length*0.07,0.56)},
+          scrollTrigger:{trigger:el, start:'top 88%', once:true}
+        });
+      });
+
+      /* MO.05 meta-in */
+      document.querySelectorAll('[data-meta]').forEach(function(el){
+        gsap.fromTo(el,{letterSpacing:'0.40em',opacity:0},
+          {letterSpacing:'0.14em',opacity:1,duration:0.7,ease:'expo.out',immediateRender:false,
+           scrollTrigger:{trigger:el,start:'top 92%',once:true}});
+      });
+
+      /* MO.06 counter */
+      document.querySelectorAll('[data-count]').forEach(function(el){
+        var target=+el.dataset.count, sfx=el.dataset.suffix||'', box={n:0};
+        gsap.to(box,{n:target,duration:1.2,ease:'expo.out',
+          onUpdate:function(){ el.textContent=Math.round(box.n).toLocaleString()+sfx; },
+          scrollTrigger:{trigger:el,start:'top 92%',once:true}});
+      });
+
+      /* MO.03 panel-stack */
+      var panels=[].slice.call(document.querySelectorAll('.panel'));
+      panels.forEach(function(p,i){
+        if(i===panels.length-1) return;
+        gsap.to(p,{scale:0.94,filter:'brightness(0.55)',ease:'none',
+          scrollTrigger:{trigger:panels[i+1],start:'top bottom',end:'top top',scrub:true}});
+      });
+
+      ScrollTrigger.refresh();
+      }catch(err){
+        // Failsafe: never leave a reveal half-applied. Clear any start
+        // state so the page falls back to plain, fully visible content.
+        document.querySelectorAll('.lm').forEach(function(l){ l.style.transform='none'; });
+        document.querySelectorAll('[data-meta]').forEach(function(m){ m.style.opacity='1'; });
+      }
+    });
+  }
+
+  /* ---------- MO.04 rail ---------- */
+  var rail=document.querySelector('.rail');
+  if(rail){
+    var prev=document.querySelector('[data-rail="-1"]'), next=document.querySelector('[data-rail="1"]');
+    function sync(){
+      prev.disabled = rail.scrollLeft<=2;
+      next.disabled = rail.scrollLeft >= rail.scrollWidth-rail.clientWidth-2;
+    }
+    function step(dir){
+      var card=rail.firstElementChild;
+      var gap=parseFloat(getComputedStyle(rail).columnGap)||0;
+      rail.scrollBy({left:(card.offsetWidth+gap)*dir,behavior:'smooth'});
+    }
+    prev.addEventListener('click',function(){step(-1);});
+    next.addEventListener('click',function(){step(1);});
+    rail.addEventListener('scroll',sync,{passive:true});
+    rail.addEventListener('keydown',function(e){
+      if(e.key==='ArrowRight'){e.preventDefault();step(1);}
+      if(e.key==='ArrowLeft'){e.preventDefault();step(-1);}
+    });
+    var down=false,sx=0,ss=0,moved=false;
+    rail.addEventListener('pointerdown',function(e){
+      if(e.pointerType!=='mouse')return;
+      down=true;moved=false;sx=e.clientX;ss=rail.scrollLeft;
+    });
+    rail.addEventListener('pointermove',function(e){
+      if(!down)return;
+      var dx=e.clientX-sx;
+      if(Math.abs(dx)>3){moved=true;rail.style.cursor='grabbing';rail.style.scrollSnapType='none';}
+      rail.scrollLeft=ss-dx;
+    });
+    function up(){down=false;rail.style.cursor='';rail.style.scrollSnapType='';}
+    rail.addEventListener('pointerup',up);
+    rail.addEventListener('pointercancel',up);
+    rail.addEventListener('click',function(e){ if(moved){e.preventDefault();e.stopPropagation();moved=false;} },true);
+    rail.addEventListener('wheel',function(e){
+      if(!e.shiftKey)return; e.preventDefault(); rail.scrollLeft+=e.deltaY;
+    },{passive:false});
+    sync();
+  }
+})();
+</script>

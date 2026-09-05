@@ -25,6 +25,8 @@
 /* ---------- section rhythm (sheet A.03) ---------- */
 .section { padding: var(--section-y) var(--gutter); position: relative; }
 .section--bleed { padding-left: 0; padding-right: 0; }
+/* A hero opens the page; it takes no leading rhythm. */
+.section--flush { padding-top: 0; }
 
 .field {
   max-width: var(--content-max);
@@ -71,11 +73,25 @@
   backdrop-filter: blur(14px);
   border-bottom: 1px solid var(--c-hairline-soft);
 }
-.header__mark {
-  font-family: var(--f-display); font-size: 1.35rem; letter-spacing: -0.02em;
-  color: var(--c-text-primary); text-decoration: none; white-space: nowrap;
+/* ---------- wordmark ---------- */
+.wordmark {
+  font-family: var(--f-display);
+  color: var(--c-text-primary);
+  text-decoration: none;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
 }
-.header__stop { color: var(--c-brass); }
+.wordmark__stop { color: var(--c-brass); }
+/* Instrument Serif is drawn for display sizes: it needs positive tracking
+   as it shrinks and negative tracking as it grows. */
+.wordmark--sm { font-size: 1.35rem; letter-spacing: 0.002em; }
+.wordmark--md { font-size: var(--t-display-m); letter-spacing: -0.015em; line-height: 1; }
+.wordmark--lg { font-size: var(--t-display-m); letter-spacing: -0.022em; line-height: 1; }
+
+/* WCAG 2.5.8 floor is 24px; 44px is the comfortable target. Grown with
+   padding so the visual size of the mark is untouched. */
+.header__mark { min-height: 44px; }
 .header__descriptor,
 .header__nav,
 .header__cta { display: none; }
@@ -90,12 +106,14 @@
     font-size: var(--t-caption); color: var(--c-text-secondary);
   }
   .header__cta {
-    display: inline-block; justify-self: end;
+    display: inline-flex; align-items: center; justify-self: end;
+    min-height: 44px; padding-block: var(--s-2);
     font-size: var(--t-caption); color: var(--c-text-primary);
-    text-decoration: none; border-bottom: 1px solid currentColor;
-    padding-bottom: 2px;
+    text-decoration: none;
     transition: color var(--d-micro) var(--e-micro);
   }
+  /* The rule stays tight to the text; the anchor carries the hit area. */
+  .header__cta > span { border-bottom: 1px solid currentColor; padding-bottom: 2px; }
   .header__cta:hover { color: var(--c-brass); }
   .header__toggle { display: none; }
 }
@@ -109,6 +127,8 @@
 
 .header__toggle {
   justify-self: end;
+  display: inline-flex; align-items: center; justify-content: center;
+  min-height: 44px; min-width: 64px;
   font-family: var(--f-mono); font-size: var(--t-meta); letter-spacing: var(--ls-meta);
   text-transform: uppercase; color: var(--c-text-primary);
   background: none; border: 1px solid var(--c-hairline); border-radius: var(--r-none);
@@ -125,6 +145,7 @@ html.menu-open { overflow: hidden; }
 }
 .menu nav { display: flex; flex-direction: column; gap: var(--s-4); }
 .menu__link {
+  display: flex; align-items: center; min-height: 44px;
   font-family: var(--f-display); font-size: var(--t-display-m);
   line-height: 1; letter-spacing: var(--ls-display);
   color: var(--c-text-primary); text-decoration: none;
@@ -165,6 +186,14 @@ html.menu-open { overflow: hidden; }
 }
 .rail::-webkit-scrollbar { display: none; }
 .rail > * { scroll-snap-align: start; flex: 0 0 auto; }
+/* Sized so the next card always peeks past the right edge — otherwise the
+   set very nearly fits at desktop width and the prev/next controls read as
+   decorative. */
+.rail__card {
+  width: min(84vw, 400px);
+  border-top: 1px solid var(--c-hairline);
+  padding-top: var(--s-4);
+}
 .rail__nav { display: flex; gap: var(--s-2); margin-top: var(--s-5); }
 .rail__btn {
   width: 44px; height: 44px;
@@ -188,11 +217,7 @@ html.menu-open { overflow: hidden; }
   display: grid; gap: var(--s-7);
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
 }
-.footer__mark {
-  font-family: var(--f-display); font-size: var(--t-display-m);
-  line-height: 1; letter-spacing: var(--ls-display);
-  color: var(--c-text-primary); text-decoration: none;
-}
+.footer__mark { align-self: start; min-height: 44px; }
 .footer__col ul { list-style: none; margin: var(--s-3) 0 0; padding: 0; display: flex; flex-direction: column; gap: var(--s-2); }
 .footer__link {
   color: var(--c-text-secondary); text-decoration: none; font-size: var(--t-caption);
@@ -203,4 +228,29 @@ html.menu-open { overflow: hidden; }
 .footer__base {
   display: flex; justify-content: space-between; gap: var(--s-4); flex-wrap: wrap;
   border-top: 1px solid var(--c-hairline-soft); padding-top: var(--s-5);
+}
+
+/* ---------- W.01 light-fall (sheet B.02) ---------- */
+.lightfall { position: relative; overflow: hidden; background: var(--c-espresso); }
+.lightfall__ground {
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse 58% 46% at 42% -6%,
+      rgba(200,154,91,0.30) 0%, rgba(200,154,91,0.10) 34%, transparent 72%),
+    linear-gradient(163deg, var(--c-coffee) 0%, var(--c-espresso) 58%, var(--c-mahogany) 100%);
+}
+.lightfall__img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.lightfall__canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+/* The canvas is transparent until ogl paints, so keep it hidden until then. */
+.lightfall__canvas:not([data-gl='on']) { opacity: 0; }
+.lightfall__label { position: absolute; left: var(--s-4); bottom: var(--s-4); color: var(--c-text-secondary); }
+
+/* T2: no shader, so animate the gradient's light instead. */
+.lightfall[data-tier='2'] .lightfall__ground { animation: lightfall-sweep 14s var(--e-transform) infinite; }
+@keyframes lightfall-sweep {
+  0%, 100% { background-position: 0% 0%, 0% 0%; filter: brightness(1); }
+  50%      { background-position: 0% 12%, 0% 0%; filter: brightness(1.10); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .lightfall[data-tier='2'] .lightfall__ground { animation: none; }
 }

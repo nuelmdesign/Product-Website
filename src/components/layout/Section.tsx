@@ -13,6 +13,7 @@ export function Section({
   id,
   className,
   bleed = false,
+  flush = false,
 }: {
   children: ReactNode;
   tone?: 'dark' | 'light';
@@ -20,12 +21,14 @@ export function Section({
   className?: string;
   /** Skip the gutter — for full-bleed media. */
   bleed?: boolean;
+  /** Drop the leading rhythm — for a hero that opens the page. */
+  flush?: boolean;
 }) {
   return (
     <section
       id={id}
       data-tone={tone}
-      className={`section ${bleed ? 'section--bleed' : ''} ${className ?? ''}`.trim()}
+      className={`section ${bleed ? 'section--bleed' : ''} ${flush ? 'section--flush' : ''} ${className ?? ''}`.trim()}
     >
       {children}
     </section>

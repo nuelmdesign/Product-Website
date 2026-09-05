@@ -81,6 +81,8 @@ const AUDIT = () => {
 
   const out = {
     contrast: [],
+    gradientText: [],
+    collapsedMedia: [],
     overflow: null,
     headings: [],
     imagesNoAlt: [],
@@ -129,6 +131,20 @@ const AUDIT = () => {
     if (seen.has(key)) continue;
     seen.add(key);
 
+    // A gradient or image ground cannot be resolved to a single colour, so
+    // the ratio above is computed against an ancestor and may be optimistic.
+    // Flag it for a human rather than reporting a pass.
+    let g = el, grad = null;
+    while (g && g !== document.documentElement) {
+      const gs = getComputedStyle(g);
+      if (gs.backgroundImage && gs.backgroundImage !== 'none') { grad = g; break; }
+      if (parse(gs.backgroundColor)?.a >= 0.999) break;
+      g = g.parentElement;
+    }
+    if (grad) {
+      out.gradientText.push(`${el.tagName.toLowerCase()}.${(el.className||'').toString().split(' ')[0]} over ${grad.tagName.toLowerCase()}.${(grad.className||'').toString().split(' ')[0]} — "${text.slice(0,28)}"`);
+    }
+
     if (r < need) {
       out.contrast.push({
         text: text.slice(0, 46),
@@ -167,16 +183,57 @@ const AUDIT = () => {
     .slice(0, 6)
     .map((el) => `${el.tagName.toLowerCase()} "${(el.textContent || '').trim().slice(0, 20)}" ${Math.round(el.getBoundingClientRect().width)}x${Math.round(el.getBoundingClientRect().height)}`);
 
-  /* --- content hidden at rest (the classic scroll-reveal bug) --- */
-  out.hiddenAtRest = [...document.querySelectorAll('h1,h2,h3,p,li,figure,img,section')]
+  /* --- content hidden at rest (the classic scroll-reveal bug) ---
+     opacity and visibility are only two of the ways a reveal strands
+     content. A gsap.from() that never plays leaves the element clipped
+     (clip-path) or translated out of its own mask, both of which look
+     identical to a blank page and neither of which touches opacity. */
+  const clipHides = (v) => {
+    if (!v || v === 'none') return false;
+    const nums = v.match(/(\d+(?:\.\d+)?)%/g);
+    return !!nums && nums.some((n) => parseFloat(n) >= 90);
+  };
+  const pushedOut = (el) => {
+    const t = getComputedStyle(el).transform;
+    if (!t || t === 'none') return false;
+    const m = t.match(/matrix\(([^)]+)\)/);
+    if (!m) return false;
+    const ty = parseFloat(m[1].split(',')[5]);
+    const h = el.getBoundingClientRect().height || 1;
+    return Math.abs(ty) > h * 0.5;
+  };
+  out.hiddenAtRest = [...document.querySelectorAll('h1,h2,h3,p,li,figure,img,section,div')]
     .filter((el) => {
       const s = getComputedStyle(el);
       const r = el.getBoundingClientRect();
       const onScreen = r.top < innerHeight && r.bottom > 0 && r.width > 0;
-      return onScreen && (px(s.opacity) === 0 || s.visibility === 'hidden');
+      if (!onScreen) return false;
+      return px(s.opacity) === 0 || s.visibility === 'hidden' ||
+             clipHides(s.clipPath) || pushedOut(el);
     })
-    .slice(0, 6)
-    .map((el) => `${el.tagName.toLowerCase()}.${(el.className || '').toString().split(' ')[0]}`);
+    .slice(0, 8)
+    .map((el) => {
+      const s = getComputedStyle(el);
+      const why = px(s.opacity) === 0 ? 'opacity:0'
+        : s.visibility === 'hidden' ? 'visibility:hidden'
+        : clipHides(s.clipPath) ? `clip-path:${s.clipPath}`
+        : 'transform pushes content out of its box';
+      return `${el.tagName.toLowerCase()}.${(el.className || '').toString().split(' ')[0]} (${why})`;
+    });
+
+  /* --- collapsed media (a figure that lost its height renders as nothing) --- */
+  out.collapsedMedia = [...document.querySelectorAll('.figure, img, canvas, video')]
+    .filter((el) => {
+      const r = el.getBoundingClientRect();
+      const parent = el.parentElement?.getBoundingClientRect();
+      if (!parent || parent.height < 40) return false;
+      return r.height < 4 || r.width < 4;
+    })
+    .slice(0, 5)
+    .map((el) => {
+      const r = el.getBoundingClientRect();
+      return `${el.tagName.toLowerCase()}.${(el.className || '').toString().split(' ')[0]} ${Math.round(r.width)}x${Math.round(r.height)}`;
+    });
 
   /* --- landmarks --- */
   out.landmarks = {
@@ -237,6 +294,8 @@ for (const vp of VIEWPORTS) {
         `${c.ratio}:1 (needs ${c.need}) ${c.sel} ${c.size} ${c.color} on ${c.bg} — "${c.text}"`);
     if (a.hiddenAtRest.length)
       add('FAIL', route, vp.name, 'hidden-at-rest', a.hiddenAtRest.join(', '));
+    if (a.collapsedMedia?.length)
+      add('FAIL', route, vp.name, 'collapsed-media', a.collapsedMedia.join(', '));
     if (a.imagesNoAlt.length)
       add('FAIL', route, vp.name, 'img-alt', a.imagesNoAlt.join(', '));
     if (a.landmarks.h1Count !== 1)
@@ -255,6 +314,9 @@ for (const vp of VIEWPORTS) {
     }
     if (a.smallTargets.length)
       add('WARN', route, vp.name, 'touch-target', a.smallTargets.join(' | '));
+    if (a.gradientText.length)
+      add('WARN', route, vp.name, 'contrast-unverifiable',
+        `${a.gradientText.length} text nodes sit on a gradient/image ground; ratio is computed against an ancestor. Confirm a scrim: ${a.gradientText.slice(0,3).join(' | ')}`);
 
     // focus visibility — first few focusables must show a visible ring
     const focusIssues = await page.evaluate(() => {

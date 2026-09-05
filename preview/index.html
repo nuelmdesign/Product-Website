@@ -141,10 +141,14 @@ p{margin:0}
   will-change:transform,filter;display:grid;overflow:hidden}
 .panel__bg{position:absolute;inset:0}
 .panel__in{position:relative;padding:var(--s-9) var(--gutter);
-  display:flex;flex-direction:column;justify-content:space-between;min-height:100svh}
-.p1 .panel__bg{background:linear-gradient(158deg,#4A382C 0%,#1B1410 62%,#5A3428 100%)}
-.p2 .panel__bg{background:linear-gradient(198deg,#2E2A22 0%,#14100D 55%,#3B2A21 100%)}
-.p3 .panel__bg{background:linear-gradient(140deg,#5A3428 0%,#171210 60%,#3E2E24 100%)}
+  display:flex;flex-direction:column;justify-content:space-between;min-height:100svh;
+  /* Scrim. The references are bright at the top, so cream text needs a
+     guaranteed dark ground under it whatever photograph lands here. */
+  background:linear-gradient(180deg,rgba(20,16,13,.72) 0%,rgba(20,16,13,.16) 34%,
+                                    rgba(20,16,13,.34) 62%,rgba(20,16,13,.82) 100%)}
+.p1 .panel__bg{background:linear-gradient(163deg,#E0B98A 0%,#7A5A3C 42%,#2A2018 100%)}
+.p2 .panel__bg{background:linear-gradient(163deg,#C4AC85 0%,#6E5A42 44%,#3E3226 100%)}
+.p3 .panel__bg{background:linear-gradient(163deg,#D8C7AC 0%,#A5784F 40%,#6A4632 100%)}
 .panel__bg::after{content:"";position:absolute;inset:0;
   background:radial-gradient(ellipse 52% 40% at 50% -8%,rgba(200,154,91,.26),transparent 70%)}
 
@@ -167,9 +171,9 @@ p{margin:0}
   text-decoration:none;color:var(--c-cream)}
 .card__bg{position:absolute;inset:0;transition:transform 900ms var(--e-entrance),
   filter 400ms var(--e-micro)}
-.c1 .card__bg{background:linear-gradient(150deg,#5A3428,#181310 70%)}
-.c2 .card__bg{background:linear-gradient(200deg,#3B2A21,#100C09 72%)}
-.c3 .card__bg{background:linear-gradient(120deg,#4A5340,#14100D 68%)}
+.c1 .card__bg{background:linear-gradient(163deg,#B98B58,#3A2A1E 78%)}
+.c2 .card__bg{background:linear-gradient(163deg,#C4A882,#4A3A28 78%)}
+.c3 .card__bg{background:linear-gradient(163deg,#C2A882,#4E3423 78%)}
 .card:hover .card__bg{transform:scale(1.06);filter:brightness(1.18) saturate(1.08)}
 .card__cap{position:absolute;left:var(--s-4);right:var(--s-4);bottom:var(--s-4)}
 .card__t{font-family:var(--f-d);font-size:1.5rem;line-height:1.05;margin-top:var(--s-2)}
@@ -261,12 +265,13 @@ p{margin:0}
     <div class="panel__bg"></div>
     <div class="panel__in">
       <div class="hero__top">
-        <span class="meta coords">43.7031° N,<br>5.4500° E</span>
-        <span class="meta">Provence &middot; 2025</span>
+        <span class="meta coords">6.4281° N,<br>3.4219° E</span>
+        <span class="meta">Lagos &middot; Nigeria</span>
+        <span class="meta">Visualisation</span>
       </div>
       <div class="hero__bottom">
-        <h2 class="display-l" data-split>villa lumière</h2>
-        <p class="prose" style="max-width:34ch;color:var(--c-cream)">A secluded villa surrounded by vineyards and olive trees. Expansive windows, natural textures, a horizon that never ends.</p>
+        <h2 class="display-l" data-split>Pavilion House</h2>
+        <p class="prose" style="max-width:38ch;color:var(--c-cream)">A single-storey pavilion that opens along its whole length. Folding timber doors dissolve the wall, so the garden becomes the fourth room.</p>
       </div>
     </div>
   </section>
@@ -274,12 +279,13 @@ p{margin:0}
     <div class="panel__bg"></div>
     <div class="panel__in">
       <div class="hero__top">
-        <span class="meta coords">43.5528° N,<br>7.0174° E</span>
-        <span class="meta">Côte d'Azur &middot; 2025</span>
+        <span class="meta coords">31.6295° N,<br>7.9811° W</span>
+        <span class="meta">Marrakesh &middot; Morocco</span>
+        <span class="meta">Visualisation</span>
       </div>
       <div class="hero__bottom">
-        <h2 class="display-l" data-split>villa solenne</h2>
-        <p class="prose" style="max-width:34ch;color:var(--c-cream)">A coastal villa where the sea and sky merge. Terraces bathed in Mediterranean light, serene interiors, the calm of endless horizons.</p>
+        <h2 class="display-l" data-split>Courtyard House</h2>
+        <p class="prose" style="max-width:38ch;color:var(--c-cream)">Board-formed concrete on the street, and a sequence of planted courtyards behind it. The house is entered sideways, never head-on.</p>
       </div>
     </div>
   </section>
@@ -287,12 +293,13 @@ p{margin:0}
     <div class="panel__bg"></div>
     <div class="panel__in">
       <div class="hero__top">
-        <span class="meta coords">31.2304° N,<br>121.4737° E</span>
-        <span class="meta">Shanghai &middot; 2024</span>
+        <span class="meta coords">43.7031° N,<br>5.4500° E</span>
+        <span class="meta">Provence &middot; France</span>
+        <span class="meta">Visualisation</span>
       </div>
       <div class="hero__bottom">
-        <h2 class="display-l" data-split>casa nueve</h2>
-        <p class="prose" style="max-width:34ch;color:var(--c-cream)">An urban sanctuary of calm and craft. Undyed jade, timber screens, and restraint as a form of luxury.</p>
+        <h2 class="display-l" data-split>Olive House</h2>
+        <p class="prose" style="max-width:38ch;color:var(--c-cream)">Reclaimed beams, lime plaster and a terracotta floor. A house organised around the table rather than the view.</p>
       </div>
     </div>
   </section>
@@ -303,13 +310,13 @@ p{margin:0}
   <div class="field">
     <div class="span-all">
       <span class="meta" data-meta>Selected work</span>
-      <h2 class="display-m" data-split style="margin-top:var(--s-4)">Hover a card</h2>
+      <h2 class="display-m" data-split style="margin-top:var(--s-4)">Three houses, one language</h2>
       <p class="prose" style="margin-top:var(--s-4);font-size:var(--t-caption)">W.02 ships as a pointer-velocity RGB displacement shader. This preview shows the T2 fallback — scale and brightness — because the shader needs real photography to tune against.</p>
     </div>
     <div class="span-all cards" style="margin-top:var(--s-7)">
-      <a class="card c1" href="#work"><div class="card__bg"></div><div class="card__view"><span>VIEW</span></div><div class="card__cap"><span class="meta">Provence · 2025</span><p class="card__t">Villa Lumière</p></div></a>
-      <a class="card c2" href="#work"><div class="card__bg"></div><div class="card__view"><span>VIEW</span></div><div class="card__cap"><span class="meta">Côte d'Azur · 2025</span><p class="card__t">Villa Solenne</p></div></a>
-      <a class="card c3" href="#work"><div class="card__bg"></div><div class="card__view"><span>VIEW</span></div><div class="card__cap"><span class="meta">Shanghai · 2024</span><p class="card__t">Casa Nueve</p></div></a>
+      <a class="card c1" href="#work"><div class="card__bg"></div><div class="card__view"><span>VIEW</span></div><div class="card__cap"><span class="meta">Lagos · Visualisation</span><p class="card__t">Pavilion House</p></div></a>
+      <a class="card c2" href="#work"><div class="card__bg"></div><div class="card__view"><span>VIEW</span></div><div class="card__cap"><span class="meta">Marrakesh · Visualisation</span><p class="card__t">Courtyard House</p></div></a>
+      <a class="card c3" href="#work"><div class="card__bg"></div><div class="card__view"><span>VIEW</span></div><div class="card__cap"><span class="meta">Provence · Visualisation</span><p class="card__t">Olive House</p></div></a>
     </div>
   </div>
 </section>

@@ -96,6 +96,16 @@
 .header__nav,
 .header__cta { display: none; }
 
+.header__toggle {
+  justify-self: end;
+  display: inline-flex; align-items: center; justify-content: center;
+  min-height: 44px; min-width: 64px;
+  font-family: var(--f-mono); font-size: var(--t-meta); letter-spacing: var(--ls-meta);
+  text-transform: uppercase; color: var(--c-text-primary);
+  background: none; border: 1px solid var(--c-hairline); border-radius: var(--r-none);
+  padding: var(--s-2) var(--s-3); cursor: pointer;
+}
+
 @media (min-width: 1024px) {
   .header { grid-template-columns: auto auto 1fr auto; }
   .header__descriptor {
@@ -125,15 +135,6 @@
 .header__link:hover,
 .header__link[aria-current='page'] { color: var(--c-brass); }
 
-.header__toggle {
-  justify-self: end;
-  display: inline-flex; align-items: center; justify-content: center;
-  min-height: 44px; min-width: 64px;
-  font-family: var(--f-mono); font-size: var(--t-meta); letter-spacing: var(--ls-meta);
-  text-transform: uppercase; color: var(--c-text-primary);
-  background: none; border: 1px solid var(--c-hairline); border-radius: var(--r-none);
-  padding: var(--s-2) var(--s-3); cursor: pointer;
-}
 
 /* ---------- mobile menu ---------- */
 html.menu-open { overflow: hidden; }
@@ -253,4 +254,73 @@ html.menu-open { overflow: hidden; }
 }
 @media (prefers-reduced-motion: reduce) {
   .lightfall[data-tier='2'] .lightfall__ground { animation: none; }
+}
+
+/* ---------- image slots ---------- */
+.figure { position: relative; overflow: hidden; width: 100%; }
+.figure__img { object-fit: cover; }
+.figure__placeholder { position: absolute; inset: 0; }
+/* Grain over the placeholder so it sits in the same world as the shader. */
+.figure__placeholder::after {
+  content: ""; position: absolute; inset: 0; opacity: 0.32;
+  background-image: radial-gradient(rgba(0,0,0,0.5) 0.5px, transparent 0.5px);
+  background-size: 3px 3px;
+}
+.figure__ref {
+  position: absolute; left: var(--s-4); bottom: var(--s-4);
+  color: var(--c-cream); mix-blend-mode: difference;
+}
+
+/* ---------- project panel (the /work index) ---------- */
+.project-panel { position: relative; min-height: 100svh; overflow: hidden; }
+/* .veil sets position:relative in globals.css, which is declared after this
+   file and wins at equal specificity — so the override has to carry both
+   classes. Without it the media collapses to zero height and the panel
+   renders as an empty scrim. */
+.veil.project-panel__media { position: absolute; inset: 0; height: 100%; }
+.project-panel__media .figure { position: absolute; inset: 0; height: 100%; aspect-ratio: auto; }
+.project-panel__grid {
+  position: relative; z-index: 1; min-height: 100svh;
+  padding: var(--s-9) var(--gutter);
+  display: flex; flex-direction: column; justify-content: space-between;
+  gap: var(--s-8);
+  /* Scrim so overlaid text clears AA against any photograph that lands. */
+  background: linear-gradient(180deg, rgba(20,16,13,0.72) 0%, rgba(20,16,13,0.16) 34%,
+                                      rgba(20,16,13,0.34) 62%, rgba(20,16,13,0.82) 100%);
+}
+.project-panel__top {
+  display: flex; justify-content: space-between; gap: var(--s-5); flex-wrap: wrap;
+}
+.project-panel__top .meta { color: var(--c-bone); }
+.project-panel__bottom {
+  display: flex; justify-content: space-between; align-items: flex-end;
+  gap: var(--s-7); flex-wrap: wrap;
+}
+.project-panel__title { color: var(--c-cream); }
+.project-panel__summary {
+  max-width: 38ch; color: var(--c-cream); font-size: var(--t-body-l);
+}
+
+/* ---------- selected work grid ---------- */
+.span-all { grid-column: 1 / -1; }
+.work-grid {
+  display: grid; gap: var(--s-5); margin-top: var(--s-7);
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+.work-card { display: block; text-decoration: none; color: inherit; position: relative; }
+.work-card .figure { transition: filter var(--d-ui) var(--e-micro); }
+.work-card:hover .figure { filter: brightness(1.14) saturate(1.06); }
+.work-card__cap { margin-top: var(--s-3); }
+.work-card__title {
+  font-family: var(--f-display); font-size: var(--t-display-m);
+  line-height: 1; letter-spacing: var(--ls-display);
+  color: var(--c-text-primary); margin-top: var(--s-2);
+}
+
+/* Visually hidden, still announced. For pages whose real heading is carried
+   by imagery — the /work index is a stack of full-viewport panels, so a
+   visible page title would fight the design. */
+.sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0;
 }

@@ -41,7 +41,6 @@ export function MaskUp({
 
     register();
     let split: SplitText | null = null;
-    let st: ScrollTrigger | null = null;
     let cancelled = false;
 
     // Splitting before the webfont lands breaks lines at the wrong words.
@@ -50,21 +49,24 @@ export function MaskUp({
 
       split = new SplitText(el, { type: 'lines', mask: 'lines', linesClass: 'line-mask' });
 
-      const tween = gsap.from(split.lines, {
-        yPercent: 110,
-        duration: 0.9,
-        ease: ENTRANCE,
-        stagger: { each: 0.07, amount: Math.min(split.lines.length * 0.07, 0.56) },
-        delay,
-        paused: true,
-      });
-
-      st = ScrollTrigger.create({ trigger: el, start: START, once: true, onEnter: () => tween.play() });
+      gsap.fromTo(
+        split.lines,
+        { yPercent: 110 },
+        {
+          yPercent: 0,
+          duration: 0.9,
+          ease: ENTRANCE,
+          immediateRender: false,
+          stagger: { each: 0.07, amount: Math.min(split.lines.length * 0.07, 0.56) },
+          delay,
+          scrollTrigger: { trigger: el, start: START, once: true },
+        },
+      );
     });
 
     return () => {
       cancelled = true;
-      st?.kill();
+      ScrollTrigger.getAll().forEach((t) => { if (t.trigger === el) t.kill(); });
       split?.revert();
     };
   }, [animates, delay]);
@@ -102,21 +104,15 @@ export function Veil({
     const inner = el.querySelector('img, video, [data-veil-inner]');
 
     const tl = gsap.timeline({
-      paused: true,
-      defaults: { duration: 1.2, ease: ENTRANCE },
+      delay,
+      defaults: { duration: 1.2, ease: ENTRANCE, immediateRender: false },
+      scrollTrigger: { trigger: el, start: START, once: true },
     });
-    tl.from(el, { clipPath: 'inset(0 0 100% 0)' }, 0);
-    if (inner) tl.from(inner, { scale: 1.14 }, 0);
-
-    const st = ScrollTrigger.create({
-      trigger: el,
-      start: START,
-      once: true,
-      onEnter: () => tl.delay(delay).play(),
-    });
+    tl.fromTo(el, { clipPath: 'inset(0 0 100% 0)' }, { clipPath: 'inset(0 0 0% 0)' }, 0);
+    if (inner) tl.fromTo(inner, { scale: 1.14 }, { scale: 1 }, 0);
 
     return () => {
-      st.kill();
+      tl.scrollTrigger?.kill();
       tl.kill();
     };
   }, [animates, delay]);
@@ -150,19 +146,22 @@ export function MetaIn({
     if (!el || !animates) return;
 
     register();
-    const tween = gsap.from(el, {
-      letterSpacing: '0.40em',
-      opacity: 0,
-      duration: 0.7,
-      ease: ENTRANCE,
-      delay,
-      paused: true,
-    });
-
-    const st = ScrollTrigger.create({ trigger: el, start: START, once: true, onEnter: () => tween.play() });
+    const tween = gsap.fromTo(
+      el,
+      { letterSpacing: '0.40em', opacity: 0 },
+      {
+        letterSpacing: '0.14em',
+        opacity: 1,
+        duration: 0.7,
+        ease: ENTRANCE,
+        immediateRender: false,
+        delay,
+        scrollTrigger: { trigger: el, start: START, once: true },
+      },
+    );
 
     return () => {
-      st.kill();
+      tween.scrollTrigger?.kill();
       tween.kill();
     };
   }, [animates, delay]);

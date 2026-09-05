@@ -5,6 +5,9 @@ import { SpecTable } from '@/components/type/SpecTable';
 import { MetaLabel, CoordinateStamp } from '@/components/type/MetaLabel';
 import { MaskUp, MetaIn, Counter, Veil } from '@/lib/motion/primitives';
 import { LightFall } from '@/components/media/LightFall';
+import { PROJECTS, SERVICES, HERO } from '@/content/projects';
+import { Figure } from '@/components/media/Figure';
+import Link from 'next/link';
 
 /**
  * FOUNDATIONS GALLERY — temporary.
@@ -17,12 +20,6 @@ import { LightFall } from '@/components/media/LightFall';
  * filled without touching layout.
  */
 
-const SERVICES = [
-  { n: '/1', title: 'Architecture', body: 'From first sketch to final handover. Residential and hospitality work at every scale.' },
-  { n: '/2', title: 'Interior', body: 'Materials, light and furniture, resolved as one decision rather than three.' },
-  { n: '/3', title: 'Project delivery', body: 'Consultants, contractors and programme, held to the drawing set.' },
-  { n: '/4', title: 'Furniture', body: 'Pieces made for a specific room, when nothing off the shelf will sit right.' },
-];
 
 const SPEC = [
   { label: 'Year completed', value: '2025' },
@@ -89,6 +86,29 @@ export default function Page() {
               <p className="meta" style={{ marginTop: 'var(--s-2)' }}>{stat.label}</p>
             </div>
           ))}
+        </Field>
+      </Section>
+
+      {/* ---- selected work · project cards ---- */}
+      <Section>
+        <Field>
+          <div style={{ gridColumn: '1 / -1' }}>
+            <MetaLabel>Selected work</MetaLabel>
+            <MaskUp as="h2" className="display-l" >
+              Three houses, one language
+            </MaskUp>
+          </div>
+          <div className="span-all work-grid">
+            {PROJECTS.map((p) => (
+              <Link href={`/work`} key={p.slug} className="work-card">
+                <Figure image={p.card} sizes="(min-width: 1024px) 33vw, 84vw" />
+                <div className="work-card__cap">
+                  <MetaLabel>{`${p.place} · ${p.status}`}</MetaLabel>
+                  <p className="work-card__title">{p.name}</p>
+                </div>
+              </Link>
+            ))}
+          </div>
         </Field>
       </Section>
 

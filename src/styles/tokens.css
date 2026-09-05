@@ -38,6 +38,9 @@
   /* Inverted (linen sections) */
   --c-inv-text-primary:   #1F1712;
   --c-inv-text-secondary: #6B5C4F;
+  --c-inv-text-meta:      #72624F;  /* 4.73:1 on linen. The dark-ground meta
+                                       colour is only 3.33:1 here, so it must
+                                       be overridden, not inherited.        */
   --c-inv-hairline:       #C9BCAB;
 
   /* Usage budget (documentation, not consumed by CSS)
@@ -54,9 +57,12 @@
      UI/Body : Instrument Sans   — neo-grotesk, same foundry
      Meta    : IBM Plex Mono     — humanist mono, coords & labels */
 
-  --f-display: "Instrument Serif", "Iowan Old Style", Georgia, serif;
-  --f-sans:    "Instrument Sans", "Helvetica Neue", Arial, sans-serif;
-  --f-mono:    "IBM Plex Mono", ui-monospace, "SF Mono", monospace;
+  /* The --font-*-loaded vars are emitted by next/font (see src/lib/fonts.ts)
+     and self-hosted. The literal names are a safety net for any context
+     that renders tokens.css without the Next font layer.               */
+  --f-display: var(--font-display-loaded, "Instrument Serif", Georgia, serif);
+  --f-sans:    var(--font-sans-loaded, "Instrument Sans", Arial, sans-serif);
+  --f-mono:    var(--font-mono-loaded, "IBM Plex Mono", ui-monospace, monospace);
 
   /* Fluid scale. Min = 360px viewport, max = 1680px viewport. */
   --t-display-xl:  clamp(3.25rem, 1.20rem + 9.10vw, 9.50rem);  /*  52 → 152 */

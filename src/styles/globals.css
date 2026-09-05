@@ -1,0 +1,107 @@
+@import "tailwindcss";
+@import "./tokens.css";
+@import "./components.css";
+
+/* ------------------------------------------------------------------
+   Tailwind bridge. tokens.css stays the source of truth; this only
+   exposes those values as utilities. Never define a colour here.
+   ------------------------------------------------------------------ */
+@theme inline {
+  --color-void:        var(--c-void);
+  --color-espresso:    var(--c-espresso);
+  --color-coffee:      var(--c-coffee);
+  --color-mahogany:    var(--c-mahogany);
+  --color-linen:       var(--c-linen);
+  --color-cream:       var(--c-cream);
+  --color-bone:        var(--c-bone);
+  --color-brass:       var(--c-brass);
+  --color-terracotta:  var(--c-terracotta);
+  --color-olive:       var(--c-olive);
+  --color-rule:        var(--c-hairline);
+  --color-rule-soft:   var(--c-hairline-soft);
+  --color-tx:          var(--c-text-primary);
+  --color-tx-2:        var(--c-text-secondary);
+  --color-tx-3:        var(--c-text-meta);
+
+  --font-display: var(--f-display);
+  --font-sans:    var(--f-sans);
+  --font-mono:    var(--f-mono);
+
+  --radius-hair: var(--r-hair);
+  --radius-pill: var(--r-pill);
+}
+
+/* ------------------------------------------------------------------
+   Base
+   ------------------------------------------------------------------ */
+*, *::before, *::after { box-sizing: border-box; }
+
+html {
+  /* Lenis drives scroll on desktop; native everywhere else. */
+  scroll-behavior: auto;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--c-espresso);
+  color: var(--c-text-primary);
+  font-family: var(--f-sans);
+  font-size: var(--t-body);
+  line-height: var(--lh-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  overflow-x: clip;
+}
+
+/* Lenis: it manages scroll position, so the document must not also try. */
+html.lenis, html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+.lenis.lenis-stopped { overflow: hidden; }
+
+h1, h2, h3, h4 { margin: 0; font-weight: 400; text-wrap: balance; }
+p { margin: 0; }
+img, video { display: block; max-width: 100%; height: auto; }
+
+::selection { background: var(--c-brass); color: var(--c-espresso); }
+
+:focus-visible {
+  outline: 2px solid var(--c-brass);
+  outline-offset: 3px;
+}
+
+/* Inverted (linen) regions. Set once here, consumed by <Section tone="light">. */
+[data-tone="light"] {
+  background: var(--c-linen);
+  color: var(--c-inv-text-primary);
+  --c-text-primary:   var(--c-inv-text-primary);
+  --c-text-secondary: var(--c-inv-text-secondary);
+  --c-text-meta:      var(--c-inv-text-meta);
+  --c-hairline:       var(--c-inv-hairline);
+  --c-hairline-soft:  #DCD2C4;
+}
+
+/* ------------------------------------------------------------------
+   Motion primitives — resting state is VISIBLE. GSAP sets the "from"
+   state at runtime only once it has confirmed it will animate, so a
+   JS failure or a crawler sees finished content, never a blank page.
+   ------------------------------------------------------------------ */
+.line-mask { display: block; overflow: hidden; }
+
+/* GSAP SplitText wraps each line in .line-mask-mask with overflow:clip.
+   At --lh-display 0.92 the line box is shorter than the glyphs, so
+   descenders get clipped. Pad the clip box and pull it back with a
+   negative margin, leaving the rhythm untouched. */
+.line-mask-mask { padding-bottom: 0.18em; margin-bottom: -0.18em; }
+.veil { position: relative; overflow: hidden; }
+.veil > img, .veil > picture > img { will-change: transform; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto !important; }
+  *, *::before, *::after {
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 1ms !important;
+  }
+}

@@ -1,0 +1,206 @@
+/* ==================================================================
+   Component layer. Every value comes from tokens.css — no literals.
+   ================================================================== */
+
+/* ---------- type helpers (sheet A.02) ---------- */
+.display-xl { font-family: var(--f-display); font-size: var(--t-display-xl); line-height: var(--lh-display); letter-spacing: var(--ls-display); }
+.display-l  { font-family: var(--f-display); font-size: var(--t-display-l);  line-height: var(--lh-display); letter-spacing: var(--ls-display); }
+.display-m  { font-family: var(--f-display); font-size: var(--t-display-m);  line-height: 1;                 letter-spacing: var(--ls-display); }
+.display-caps { font-family: var(--f-display); text-transform: uppercase; letter-spacing: var(--ls-caps); line-height: 1.5; }
+.statement  { font-size: var(--t-statement); line-height: var(--lh-statement); max-width: var(--measure-tight); }
+.lede       { font-size: var(--t-body-l); color: var(--c-text-secondary); max-width: var(--measure); }
+.prose      { max-width: var(--measure); color: var(--c-text-secondary); }
+
+.meta {
+  font-family: var(--f-mono);
+  font-size: var(--t-meta);
+  line-height: var(--lh-meta);
+  letter-spacing: var(--ls-meta);
+  text-transform: uppercase;
+  color: var(--c-text-meta);
+  display: inline-block;
+}
+.coords { font-variant-numeric: tabular-nums; }
+
+/* ---------- section rhythm (sheet A.03) ---------- */
+.section { padding: var(--section-y) var(--gutter); position: relative; }
+.section--bleed { padding-left: 0; padding-right: 0; }
+
+.field {
+  max-width: var(--content-max);
+  margin-inline: auto;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--s-5);
+}
+@media (min-width: 640px)  { .field { grid-template-columns: repeat(6, minmax(0, 1fr)); } }
+@media (min-width: 1024px) { .field { grid-template-columns: repeat(12, minmax(0, 1fr)); gap: var(--s-6); } }
+
+/* ---------- framed panel ---------- */
+.framed { position: relative; padding: var(--frame); isolation: isolate; }
+.framed__backdrop {
+  position: absolute; inset: 0; z-index: -1;
+  background-size: cover; background-position: center;
+  filter: blur(48px) brightness(0.45) saturate(0.8);
+  transform: scale(1.1); /* hides the soft edge the blur leaves behind */
+}
+.framed__inner { position: relative; overflow: hidden; }
+
+/* ---------- spec table (TerraForma) ---------- */
+.spec-table__caption { display: block; margin-bottom: var(--s-4); }
+.spec-table__list { margin: 0; }
+.spec-table__row {
+  display: grid; grid-template-columns: 1fr auto; gap: var(--s-4);
+  padding: var(--s-3) 0;
+  border-bottom: 1px solid var(--c-hairline-soft);
+}
+.spec-table__row:first-child { border-top: 1px solid var(--c-hairline-soft); }
+.spec-table__row dt { color: var(--c-text-secondary); font-size: var(--t-caption); margin: 0; }
+.spec-table__row dd {
+  margin: 0; color: var(--c-text-primary); font-size: var(--t-caption);
+  font-family: var(--f-mono); font-variant-numeric: tabular-nums; text-align: right;
+}
+
+/* ---------- header ---------- */
+.header {
+  position: sticky; top: 0; z-index: 50;
+  display: grid; align-items: center; gap: var(--s-4);
+  grid-template-columns: 1fr auto;
+  padding: var(--s-5) var(--gutter);
+  background: color-mix(in oklab, var(--c-espresso) 82%, transparent);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--c-hairline-soft);
+}
+.header__mark {
+  font-family: var(--f-display); font-size: 1.35rem; letter-spacing: -0.02em;
+  color: var(--c-text-primary); text-decoration: none; white-space: nowrap;
+}
+.header__stop { color: var(--c-brass); }
+.header__descriptor,
+.header__nav,
+.header__cta { display: none; }
+
+@media (min-width: 1024px) {
+  .header { grid-template-columns: auto auto 1fr auto; }
+  .header__descriptor {
+    display: inline; font-size: var(--t-caption); color: var(--c-text-meta);
+  }
+  .header__nav {
+    display: block; justify-self: end;
+    font-size: var(--t-caption); color: var(--c-text-secondary);
+  }
+  .header__cta {
+    display: inline-block; justify-self: end;
+    font-size: var(--t-caption); color: var(--c-text-primary);
+    text-decoration: none; border-bottom: 1px solid currentColor;
+    padding-bottom: 2px;
+    transition: color var(--d-micro) var(--e-micro);
+  }
+  .header__cta:hover { color: var(--c-brass); }
+  .header__toggle { display: none; }
+}
+
+.header__link {
+  color: inherit; text-decoration: none;
+  transition: color var(--d-micro) var(--e-micro);
+}
+.header__link:hover,
+.header__link[aria-current='page'] { color: var(--c-brass); }
+
+.header__toggle {
+  justify-self: end;
+  font-family: var(--f-mono); font-size: var(--t-meta); letter-spacing: var(--ls-meta);
+  text-transform: uppercase; color: var(--c-text-primary);
+  background: none; border: 1px solid var(--c-hairline); border-radius: var(--r-none);
+  padding: var(--s-2) var(--s-3); cursor: pointer;
+}
+
+/* ---------- mobile menu ---------- */
+html.menu-open { overflow: hidden; }
+.menu {
+  position: fixed; inset: 0; top: 0; z-index: 40;
+  background: var(--c-espresso);
+  padding: calc(var(--s-10) + var(--s-4)) var(--gutter) var(--gutter);
+  display: flex; flex-direction: column;
+}
+.menu nav { display: flex; flex-direction: column; gap: var(--s-4); }
+.menu__link {
+  font-family: var(--f-display); font-size: var(--t-display-m);
+  line-height: 1; letter-spacing: var(--ls-display);
+  color: var(--c-text-primary); text-decoration: none;
+}
+.menu__link--cta { color: var(--c-brass); margin-top: var(--s-6); }
+
+/* ---------- progress hairline ---------- */
+.hairline {
+  position: fixed; top: 0; left: 0; z-index: 60;
+  height: 2px; width: 0; background: var(--c-brass);
+  opacity: 0; pointer-events: none;
+}
+.hairline[data-state='running'] {
+  width: 70%; opacity: 1;
+  transition: width 240ms var(--e-entrance), opacity 80ms linear;
+}
+.hairline[data-state='done'] {
+  width: 100%; opacity: 0;
+  transition: width 200ms var(--e-exit), opacity 400ms 180ms linear;
+}
+
+/* ---------- panel stack (MO.03) ---------- */
+.panel-stack__panel {
+  position: sticky; top: 0;
+  min-height: 100svh;
+  transform-origin: center top;
+  will-change: transform, filter;
+}
+
+/* ---------- rail (MO.04) ---------- */
+.rail {
+  display: flex; gap: var(--s-5);
+  overflow-x: auto; overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  padding-bottom: var(--s-2);
+  cursor: grab;
+}
+.rail::-webkit-scrollbar { display: none; }
+.rail > * { scroll-snap-align: start; flex: 0 0 auto; }
+.rail__nav { display: flex; gap: var(--s-2); margin-top: var(--s-5); }
+.rail__btn {
+  width: 44px; height: 44px;
+  display: grid; place-items: center;
+  background: none; color: var(--c-text-primary);
+  border: 1px solid var(--c-hairline); border-radius: var(--r-none);
+  cursor: pointer; font-size: 1rem;
+  transition: border-color var(--d-micro) var(--e-micro),
+              color var(--d-micro) var(--e-micro);
+}
+.rail__btn:hover:not(:disabled) { border-color: var(--c-brass); color: var(--c-brass); }
+.rail__btn:disabled { opacity: 0.3; cursor: default; }
+
+/* ---------- footer ---------- */
+.footer {
+  border-top: 1px solid var(--c-hairline);
+  padding: var(--s-9) var(--gutter) var(--s-6);
+  display: flex; flex-direction: column; gap: var(--s-8);
+}
+.footer__top {
+  display: grid; gap: var(--s-7);
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+}
+.footer__mark {
+  font-family: var(--f-display); font-size: var(--t-display-m);
+  line-height: 1; letter-spacing: var(--ls-display);
+  color: var(--c-text-primary); text-decoration: none;
+}
+.footer__col ul { list-style: none; margin: var(--s-3) 0 0; padding: 0; display: flex; flex-direction: column; gap: var(--s-2); }
+.footer__link {
+  color: var(--c-text-secondary); text-decoration: none; font-size: var(--t-caption);
+  transition: color var(--d-micro) var(--e-micro);
+}
+.footer__link:hover { color: var(--c-brass); }
+.footer__note { color: var(--c-text-secondary); font-size: var(--t-caption); margin-top: var(--s-3); }
+.footer__base {
+  display: flex; justify-content: space-between; gap: var(--s-4); flex-wrap: wrap;
+  border-top: 1px solid var(--c-hairline-soft); padding-top: var(--s-5);
+}

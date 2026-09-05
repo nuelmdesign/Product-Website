@@ -1,0 +1,149 @@
+/* ============================================================
+   CASA DEL ESPACIO — DESIGN TOKENS
+   Source of truth. Consumed by Tailwind config + component CSS.
+   Rev A · 2026-09-05
+   ============================================================ */
+
+:root {
+  /* ---------- COLOUR ----------------------------------------
+     Dark-first. The site's default ground is espresso; linen
+     sections are deliberate inversions, not the baseline.      */
+
+  /* Grounds */
+  --c-void:        #100C09;  /* deepest ground, page bg          */
+  --c-espresso:    #14100D;  /* primary dark ground              */
+  --c-coffee:      #3B2A21;  /* raised surfaces, cards           */
+  --c-mahogany:    #5A3428;  /* wood tone, heavy borders         */
+
+  /* Lights */
+  --c-linen:       #EDE6DA;  /* light-section ground             */
+  --c-cream:       #F7F2EA;  /* text on dark, brightest surface  */
+  --c-bone:        #D8CDBE;  /* muted light surface              */
+
+  /* Accents — spend sparingly */
+  --c-brass:       #C89A5B;  /* "light from the ceiling": glow,
+                                focus rings, hairline highlights */
+  --c-terracotta:  #C2643A;  /* single hot accent. Target: <=4
+                                instances per page.              */
+  --c-olive:       #4A5340;  /* the greenery note. Restrained.   */
+
+  /* Derived neutrals — warm-biased, never pure grey */
+  --c-hairline:        #3A2A22;
+  --c-hairline-soft:   #241A15;
+  --c-text-primary:    var(--c-cream);
+  --c-text-secondary:  #A8998C;
+  --c-text-meta:       #8A7A6D;  /* raised from #6E5F54: 11px mono needed
+                                    4.5:1 on espresso, not 3.07:1      */
+
+  /* Inverted (linen sections) */
+  --c-inv-text-primary:   #1F1712;
+  --c-inv-text-secondary: #6B5C4F;
+  --c-inv-hairline:       #C9BCAB;
+
+  /* Usage budget (documentation, not consumed by CSS)
+     espresso/void ....... 62%
+     coffee/mahogany ..... 18%
+     linen/cream ......... 14%
+     brass ...............  4%
+     terracotta ..........  1.5%
+     olive ...............  0.5%                                */
+
+
+  /* ---------- TYPE -----------------------------------------
+     Display : Instrument Serif  — high contrast, editorial
+     UI/Body : Instrument Sans   — neo-grotesk, same foundry
+     Meta    : IBM Plex Mono     — humanist mono, coords & labels */
+
+  --f-display: "Instrument Serif", "Iowan Old Style", Georgia, serif;
+  --f-sans:    "Instrument Sans", "Helvetica Neue", Arial, sans-serif;
+  --f-mono:    "IBM Plex Mono", ui-monospace, "SF Mono", monospace;
+
+  /* Fluid scale. Min = 360px viewport, max = 1680px viewport. */
+  --t-display-xl:  clamp(3.25rem, 1.20rem + 9.10vw, 9.50rem);  /*  52 → 152 */
+  --t-display-l:   clamp(2.50rem, 1.36rem + 5.08vw, 6.00rem);  /*  40 →  96 */
+  --t-display-m:   clamp(1.875rem, 1.22rem + 2.91vw, 3.875rem);/*  30 →  62 */
+  --t-statement:   clamp(1.375rem, 1.10rem + 1.21vw, 2.20rem); /*  22 →  35 */
+  --t-body-l:      clamp(1.0625rem, 1.01rem + 0.23vw, 1.25rem);/*  17 →  20 */
+  --t-body:        1rem;                                        /*  16      */
+  --t-caption:     0.8125rem;                                   /*  13      */
+  --t-meta:        0.6875rem;                                   /*  11      */
+
+  --lh-display:  0.92;   /* display sits tight — lines interlock */
+  --lh-statement: 1.30;
+  --lh-body:     1.70;
+  --lh-meta:     1.40;
+
+  --ls-display:  -0.022em;
+  --ls-caps:      0.16em;  /* letterspaced small caps, Puli-style */
+  --ls-meta:      0.14em;
+  --ls-body:      0em;
+
+
+  /* ---------- SPACE ----------------------------------------
+     Architectural scale. Not a naive 8pt grid — the large end
+     is deliberately sparse so section rhythm reads as rooms.   */
+
+  --s-1:   0.25rem;   /*   4 */
+  --s-2:   0.5rem;    /*   8 */
+  --s-3:   0.75rem;   /*  12 */
+  --s-4:   1rem;      /*  16 */
+  --s-5:   1.5rem;    /*  24 */
+  --s-6:   2rem;      /*  32 */
+  --s-7:   3rem;      /*  48 */
+  --s-8:   4rem;      /*  64 */
+  --s-9:   6rem;      /*  96 */
+  --s-10:  8rem;      /* 128 */
+  --s-11: 12rem;      /* 192 */
+  --s-12: 16rem;      /* 256 */
+
+  --gutter:    clamp(1.25rem, 0.72rem + 2.34vw, 4rem);   /* 20 → 64 */
+  --section-y: clamp(5rem, 2.55rem + 10.9vw, 13.5rem);   /* 80 → 216 */
+  --frame:     clamp(0.75rem, 0.42rem + 1.46vw, 2.5rem); /* inset panel margin */
+
+
+  /* ---------- GRID ----------------------------------------- */
+  --grid-max:      1680px;  /* outer bound                      */
+  --content-max:   1440px;  /* 12-col field                     */
+  --measure:       68ch;    /* running text                     */
+  --measure-tight: 46ch;    /* pull quotes, manifesto lines     */
+  --cols: 12;               /* 12 ≥1024px · 6 ≥640px · 4 <640px */
+
+
+  /* ---------- MOTION ---------------------------------------- */
+  --e-entrance: cubic-bezier(0.16, 1, 0.30, 1);    /* expo-out   */
+  --e-transform: cubic-bezier(0.65, 0, 0.35, 1);   /* in-out     */
+  --e-micro:    cubic-bezier(0.40, 0, 0.20, 1);
+  --e-exit:     cubic-bezier(0.55, 0, 1, 0.45);
+
+  --d-micro:      180ms;  /* hover, focus, press                */
+  --d-ui:         320ms;  /* menus, accordions, chips           */
+  --d-reveal:     900ms;  /* scroll-triggered content entrances  */
+  --d-cinematic: 1400ms;  /* hero, page transitions             */
+
+  --stagger: 70ms;        /* per-line / per-item                */
+
+  /* Lenis: lerp 0.085 · wheelMultiplier 1 · touchMultiplier 1.6 */
+
+
+  /* ---------- ELEVATION -------------------------------------
+     No generic drop shadows. Depth comes from a warm glow that
+     reads as brass light, plus hairlines.                      */
+  --glow-brass: 0 0 0 1px rgba(200,154,91,0.18),
+                0 24px 60px -20px rgba(200,154,91,0.22);
+  --lift:       0 32px 80px -32px rgba(0,0,0,0.85);
+
+
+  /* ---------- RADII -----------------------------------------
+     Near-zero. Architecture has edges. Radius is reserved for
+     genuinely round objects (avatars, status dots, pills).     */
+  --r-none: 0;
+  --r-hair: 2px;
+  --r-pill: 999px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --d-micro: 1ms; --d-ui: 1ms; --d-reveal: 200ms; --d-cinematic: 200ms;
+    --stagger: 0ms;
+  }
+}

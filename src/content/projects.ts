@@ -1,24 +1,31 @@
 /**
  * Content model.
  *
- * Written against the ten reference images supplied by the client. Each
- * image entry carries the path its file WILL live at, plus a `tint` pair
- * sampled by eye from the reference so the placeholder gradient reads as
- * that specific room rather than as a generic brown box.
+ * Bound to the ten supplied references, now living in public/images.
  *
- * When the files land in public/images, flip ASSETS_READY to true. Nothing
- * else changes — every layout, ratio and focal decision is already made.
+ * Two art-direction decisions came out of their actual aspect ratios rather
+ * than the original schedule:
+ *
+ *  1. Project cards moved from 3:4 to 4:5. Every supplied portrait sits
+ *     between 0.563 and 0.807, so 4:5 (0.8) crops them far less than 3:4.
+ *  2. Olive House's panel is the kitchen island, not the kitchen/dining
+ *     shot. The dining image is 0.563 — cropping that to a landscape
+ *     viewport would discard about two thirds of it.
+ *
+ * `focal` is the object-position for each slot, chosen so the crop keeps the
+ * subject rather than centring blindly. `tint` is the colour the slot paints
+ * while the image decodes.
  */
 
-export const ASSETS_READY = false;
+export const ASSETS_READY = true;
 
 export interface ProjectImage {
-  /** Schedule reference from design/asset-brief.md, sheet C.01. */
   ref: 'IM.01' | 'IM.02' | 'IM.03' | 'IM.04' | 'IM.05' | 'IM.07' | 'IM.09';
   src: string;
   alt: string;
+  /** Display ratio for the slot — not the file's native ratio. */
   ratio: string;
-  /** [top, bottom] of the placeholder gradient, sampled from the reference. */
+  focal: string;
   tint: [string, string];
 }
 
@@ -31,7 +38,7 @@ export interface Project {
   lon: number;
   typology: string;
   area: string;
-  /** These are design visualisations, not photographs of completed work. */
+  /** Design visualisations, not photographs of completed buildings. */
   status: 'Visualisation' | 'In progress' | 'Completed';
   summary: string;
   body: string[];
@@ -55,24 +62,24 @@ export const PROJECTS: Project[] = [
       'A single-storey pavilion that opens along its whole length. Folding timber doors dissolve the wall, so the garden becomes the fourth room.',
     body: [
       'The plan is one long bar under a deep slatted eave. Every principal room faces the garden through full-height folding doors, and when they are open the house has no facade at all — only a threshold.',
-      'Inside, a coffered timber ceiling carries the light deep into the plan. The bedroom sits on a raised platform of woven matting, so the floor changes underfoot before the room changes.',
-      'The bathroom is the exception: a curved terracotta drum open to the sky, planted at its edge, where the only light is what falls through the pergola.',
+      'Inside, a coffered timber ceiling carries the light deep into the plan. The bed sits on a raised platform of woven matting, so the floor changes underfoot before the room changes.',
+      'The bathroom is the exception: a curved terracotta drum open to the sky, planted at its edge, lit only by what falls through the pergola.',
     ],
     panel: {
-      ref: 'IM.03', src: '/images/pavilion-exterior-dusk.jpg', ratio: '16 / 9',
-      alt: 'The pavilion at dusk, folding timber doors open along its length, warm interior light spilling into a planted garden.',
+      ref: 'IM.03', src: '/images/pavilion-exterior-dusk.png', ratio: '16 / 9', focal: 'center 58%',
+      alt: 'The pavilion at dusk, its folding timber doors open along the full length, warm interior light spilling across a planted garden.',
       tint: ['#E0B98A', '#2A2018'],
     },
     card: {
-      ref: 'IM.04', src: '/images/pavilion-bedroom.jpg', ratio: '3 / 4',
-      alt: 'Bedroom with a coffered timber ceiling, linen curtains, and a low platform bed.',
-      tint: ['#B98B58', '#3A2A1E'],
+      ref: 'IM.04', src: '/images/pavilion-bathroom.png', ratio: '4 / 5', focal: 'center 45%',
+      alt: 'Curved terracotta-tiled bathroom with a sunken tub, a tree growing at its edge, open to the sky through a slatted pergola.',
+      tint: ['#C98A66', '#8A4F35'],
     },
     gallery: [
-      { ref: 'IM.05', src: '/images/pavilion-bedroom.jpg', ratio: '3 / 2',
-        alt: 'Bedroom looking out through full-height windows to the garden.', tint: ['#C09664', '#4A3527'] },
-      { ref: 'IM.05', src: '/images/pavilion-bathroom.jpg', ratio: '1 / 1',
-        alt: 'Curved terracotta-tiled bathroom with a sunken tub, open to the sky through a slatted pergola.', tint: ['#C98A66', '#8A4F35'] },
+      { ref: 'IM.05', src: '/images/pavilion-bedroom.png', ratio: '3 / 2', focal: 'center center',
+        alt: 'Bedroom under a coffered timber ceiling, with a low platform bed and full-height windows onto the garden.', tint: ['#C09664', '#4A3527'] },
+      { ref: 'IM.05', src: '/images/pavilion-bathroom.png', ratio: '1 / 1', focal: 'center center',
+        alt: 'The terracotta bathroom drum seen from the vanity, planting along the curved wall.', tint: ['#C98A66', '#8A4F35'] },
     ],
   },
   {
@@ -89,23 +96,23 @@ export const PROJECTS: Project[] = [
       'Board-formed concrete on the street, and a sequence of planted courtyards behind it. The house is entered sideways, never head-on.',
     body: [
       'From the road the house gives almost nothing away: a concrete wall, a pivoting timber gate, and a planted colonnade running back into the site. You arrive along the building rather than at it.',
-      'The entry hall is lit from above through a slot in the roof, so the olive tree in the courtyard is visible before the door is even open.',
-      'A long corridor runs the depth of the plan with a single deep window seat cut into it, looking across a still pool to the far wing. It is the only place in the house where you can see both ends at once.',
+      'The entry hall is lit from above through a slot cut in the roof, so the olive tree in the courtyard is visible before the door is even open.',
+      'A long corridor runs the depth of the plan with one deep window seat cut into it, looking across a still pool to the far wing. It is the only place in the house where both ends are visible at once.',
     ],
     panel: {
-      ref: 'IM.03', src: '/images/courtyard-entry-street.jpg', ratio: '16 / 9',
-      alt: 'Street elevation in board-formed concrete with a pivoting timber gate and a planted colonnade beyond.',
+      ref: 'IM.03', src: '/images/courtyard-entry-street.png', ratio: '16 / 9', focal: 'center 62%',
+      alt: 'Street elevation in board-formed concrete with a pivoting timber gate opening onto a lit, planted colonnade.',
       tint: ['#C4AC85', '#3E3226'],
     },
     card: {
-      ref: 'IM.04', src: '/images/courtyard-entry-hall.jpg', ratio: '3 / 4',
-      alt: 'Entry hall with a pivot door, rough stone wall, and olive trees in the courtyard beyond.',
+      ref: 'IM.04', src: '/images/courtyard-entry-hall.png', ratio: '4 / 5', focal: 'center 42%',
+      alt: 'Entry hall with a pivot door standing open, a rough stone wall, and olive trees in the courtyard beyond.',
       tint: ['#C4A882', '#4A3A28'],
     },
     gallery: [
-      { ref: 'IM.05', src: '/images/courtyard-corridor.jpg', ratio: '3 / 4',
-        alt: 'Corridor with a deep timber-framed window seat looking across a courtyard pool.', tint: ['#A8825A', '#3A2A20'] },
-      { ref: 'IM.05', src: '/images/courtyard-lattice-hall.jpg', ratio: '3 / 4',
+      { ref: 'IM.05', src: '/images/courtyard-corridor.png', ratio: '2 / 3', focal: 'center center',
+        alt: 'Corridor with a deep timber-framed window seat looking across a courtyard pool to an arched opening.', tint: ['#A8825A', '#3A2A20'] },
+      { ref: 'IM.05', src: '/images/courtyard-lattice-hall.png', ratio: '2 / 3', focal: 'center center',
         alt: 'Hallway with a full-height lattice screen and a checkerboard terracotta floor.', tint: ['#D6C4A6', '#7A5334'] },
     ],
   },
@@ -123,24 +130,24 @@ export const PROJECTS: Project[] = [
       'Reclaimed beams, lime plaster and a terracotta floor. A house organised around the table rather than the view.',
     body: [
       'The kitchen and dining room share one volume under exposed beams, with a roof light cut between them so the table is lit from directly above at midday.',
-      'A second kitchen — the working one — is lined in dark oak and capped with a single travertine slab that runs the full length of the island.',
-      'Throughout, the palette holds to four materials: lime plaster, oak, travertine, and terracotta. Nothing else is introduced.',
+      'The working kitchen is lined in dark oak and capped with a single travertine slab that runs the full length of the island.',
+      'Throughout, the palette holds to four materials: lime plaster, oak, travertine and terracotta. Nothing else is introduced.',
     ],
     panel: {
-      ref: 'IM.03', src: '/images/olive-kitchen-dining.jpg', ratio: '16 / 9',
-      alt: 'Kitchen and dining room under exposed beams, with a terracotta floor and rattan pendants.',
-      tint: ['#D8C7AC', '#6A4632'],
-    },
-    card: {
-      ref: 'IM.04', src: '/images/olive-kitchen-island.jpg', ratio: '3 / 4',
-      alt: 'Kitchen with a travertine island, dome pendants and dark oak joinery.',
+      ref: 'IM.03', src: '/images/olive-kitchen-island.png', ratio: '16 / 9', focal: 'center 48%',
+      alt: 'Kitchen with a long travertine island, dome pendants and dark oak joinery, opening to a garden.',
       tint: ['#C2A882', '#4E3423'],
     },
+    card: {
+      ref: 'IM.04', src: '/images/olive-powder-room.png', ratio: '4 / 5', focal: 'center center',
+      alt: 'Powder room with a backlit grid screen, a stone basin and a walnut vanity.',
+      tint: ['#C79A5C', '#4A3020'],
+    },
     gallery: [
-      { ref: 'IM.05', src: '/images/olive-powder-room.jpg', ratio: '4 / 5',
-        alt: 'Powder room with a backlit grid screen, stone basin and walnut vanity.', tint: ['#C79A5C', '#4A3020'] },
-      { ref: 'IM.05', src: '/images/olive-kitchen-dining.jpg', ratio: '3 / 2',
-        alt: 'Dining table beneath the roof light.', tint: ['#D8C7AC', '#8A6244'] },
+      { ref: 'IM.05', src: '/images/olive-kitchen-dining.png', ratio: '9 / 16', focal: 'center center',
+        alt: 'Kitchen and dining room under exposed beams, with a terracotta floor and rattan pendants.', tint: ['#D8C7AC', '#6A4632'] },
+      { ref: 'IM.05', src: '/images/olive-kitchen-island.png', ratio: '4 / 5', focal: 'center center',
+        alt: 'The travertine island seen along its length, with turned oak stools.', tint: ['#C2A882', '#4E3423'] },
     ],
   },
 ];
@@ -148,12 +155,20 @@ export const PROJECTS: Project[] = [
 /** IM.01 / IM.02 — the home hero. */
 export const HERO = {
   desktop: {
-    ref: 'IM.01' as const, src: '/images/pavilion-exterior-dusk.jpg', ratio: '16 / 9',
+    ref: 'IM.01' as const,
+    src: '/images/pavilion-exterior-dusk.png',
+    /** Downscaled derivative — the shader uploads this as a GL texture. */
+    texture: '/images/derived/hero-texture.jpg',
+    ratio: '16 / 9',
+    focal: 'center 58%',
     alt: 'A low timber pavilion at dusk with its folding doors open, warm light spilling across a planted garden.',
     tint: ['#E0B98A', '#241A14'] as [string, string],
   },
   mobile: {
-    ref: 'IM.02' as const, src: '/images/courtyard-entry-hall.jpg', ratio: '4 / 5',
+    ref: 'IM.02' as const,
+    src: '/images/courtyard-entry-hall.png',
+    ratio: '4 / 5',
+    focal: 'center 42%',
     alt: 'Entry hall with a pivot door open onto a courtyard of olive trees.',
     tint: ['#C4A882', '#2A2018'] as [string, string],
   },

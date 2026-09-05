@@ -284,14 +284,23 @@ html.menu-open { overflow: hidden; }
   padding: var(--s-9) var(--gutter);
   display: flex; flex-direction: column; justify-content: space-between;
   gap: var(--s-8);
-  /* Scrim so overlaid text clears AA against any photograph that lands. */
-  background: linear-gradient(180deg, rgba(20,16,13,0.72) 0%, rgba(20,16,13,0.16) 34%,
-                                      rgba(20,16,13,0.34) 62%, rgba(20,16,13,0.82) 100%);
+  /* Scrim, measured rather than guessed (scripts/contrast-over-media.mjs).
+     Against a blown highlight, 11px cream needs alpha >= 0.62 and the
+     display title >= 0.50, so the bands sit well above both where text
+     actually lands, and open up through the middle so the photograph
+     still reads. */
+  background: linear-gradient(180deg,
+    rgba(20,16,13,0.84) 0%,
+    rgba(20,16,13,0.74) 18%,
+    rgba(20,16,13,0.20) 42%,
+    rgba(20,16,13,0.26) 58%,
+    rgba(20,16,13,0.74) 82%,
+    rgba(20,16,13,0.90) 100%);
 }
 .project-panel__top {
   display: flex; justify-content: space-between; gap: var(--s-5); flex-wrap: wrap;
 }
-.project-panel__top .meta { color: var(--c-bone); }
+.project-panel__top .meta { color: var(--c-cream); }
 .project-panel__bottom {
   display: flex; justify-content: space-between; align-items: flex-end;
   gap: var(--s-7); flex-wrap: wrap;

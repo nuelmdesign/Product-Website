@@ -36,6 +36,7 @@ export function Figure({
             sizes={sizes}
             priority={priority}
             className="figure__img"
+            style={{ objectPosition: image.focal }}
             data-veil-inner
           />
         ) : (

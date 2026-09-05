@@ -49,8 +49,8 @@ export default function Page() {
       {/* ---- IM.01 · W.01: the real hero image drops into src ---- */}
       <Section bleed flush>
         <Veil>
-          <div data-veil-inner data-image-slot="IM.01">
-            <LightFall label="IM.01 · Home hero · 16:9 · awaiting photography" />
+          <div data-veil-inner data-image-slot="IM.01" role="img" aria-label={HERO.desktop.alt}>
+            <LightFall src={HERO.desktop.texture} ratio="16 / 9" />
           </div>
         </Veil>
       </Section>

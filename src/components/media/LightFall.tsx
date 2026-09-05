@@ -143,7 +143,11 @@ export function LightFall({
     >
       {/* T2/T3 ground. Always present; the canvas paints over it. */}
       <div className="lightfall__ground" aria-hidden="true" />
-      {src && <img className="lightfall__img" src={src} alt="" aria-hidden="true" />}
+      {src && (
+        /* T2/T3 fallback. The shader paints over this when it initialises;
+           without WebGL this IS the hero, so it must stand on its own. */
+        <img className="lightfall__img" src={src} alt="" aria-hidden="true" loading="eager" />
+      )}
       <canvas ref={canvasRef} className="lightfall__canvas" aria-hidden="true" />
       {label && <span className="lightfall__label meta">{label}</span>}
     </div>
